@@ -267,11 +267,20 @@ export type StockAlertRow = {
   notificado_em: string | null
 }
 
-type Table<Row> = {
+type Table<Row, Rel extends readonly unknown[] = []> = {
   Row: Row
   Insert: Partial<Row>
   Update: Partial<Row>
-  Relationships: []
+  Relationships: Rel
+}
+
+/** Chave estrangeira, no formato que o supabase-js usa para tipar embeds. */
+type FK<Nome extends string, Coluna extends string, Alvo extends string, UmPraUm extends boolean = false> = {
+  foreignKeyName: Nome
+  columns: [Coluna]
+  isOneToOne: UmPraUm
+  referencedRelation: Alvo
+  referencedColumns: ['id']
 }
 
 export type Database = {
@@ -281,14 +290,21 @@ export type Database = {
   public: {
     Tables: {
       profiles: Table<ProfileRow>
-      customers: Table<CustomerRow>
+      customers: Table<CustomerRow, [FK<'customers_profile_id_fkey', 'profile_id', 'profiles', true>]>
       categories: Table<CategoryRow>
-      products: Table<ProductRow>
-      variants: Table<VariantRow>
-      addresses: Table<AddressRow>
-      orders: Table<OrderRow>
-      order_items: Table<OrderItemRow>
-      order_events: Table<OrderEventRow>
+      products: Table<ProductRow, [FK<'products_category_id_fkey', 'category_id', 'categories'>]>
+      variants: Table<VariantRow, [FK<'variants_product_id_fkey', 'product_id', 'products'>]>
+      addresses: Table<AddressRow, [FK<'addresses_customer_id_fkey', 'customer_id', 'customers'>]>
+      orders: Table<OrderRow, [FK<'orders_customer_id_fkey', 'customer_id', 'customers'>]>
+      order_items: Table<
+        OrderItemRow,
+        [
+          FK<'order_items_order_id_fkey', 'order_id', 'orders'>,
+          FK<'order_items_product_id_fkey', 'product_id', 'products'>,
+          FK<'order_items_variant_id_fkey', 'variant_id', 'variants'>,
+        ]
+      >
+      order_events: Table<OrderEventRow, [FK<'order_events_order_id_fkey', 'order_id', 'orders'>]>
       notices: Table<NoticeRow>
       banners: Table<BannerRow>
       coupons: Table<CouponRow>
@@ -296,9 +312,15 @@ export type Database = {
       payment_options: Table<PaymentOptionRow>
       store_settings: Table<StoreSettingsRow>
       email_lists: Table<EmailListRow>
-      email_campaigns: Table<EmailCampaignRow>
+      email_campaigns: Table<EmailCampaignRow, [FK<'email_campaigns_lista_id_fkey', 'lista_id', 'email_lists'>]>
       email_automations: Table<EmailAutomationRow>
-      stock_alerts: Table<StockAlertRow>
+      stock_alerts: Table<
+        StockAlertRow,
+        [
+          FK<'stock_alerts_product_id_fkey', 'product_id', 'products'>,
+          FK<'stock_alerts_variant_id_fkey', 'variant_id', 'variants'>,
+        ]
+      >
     }
     Views: { [_ in never]: never }
     Functions: {
