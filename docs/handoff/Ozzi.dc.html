@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #F2EEE7; font-family: 'Jost', Helvetica, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #232320; text-decoration: none; }
+  a:hover { color: #8A6A4F; }
+  ::selection { background: #E0D2C0; }
+  input, select, textarea, button { font-family: 'Jost', Helvetica, sans-serif; color: inherit; }
+  input:focus, select:focus, textarea:focus { outline: 1px solid #232320; outline-offset: -1px; }
+</style>
+</helmet>
+
+<div style="background:#F2EEE7; color:#232320; min-height:100vh; display:flex; flex-direction:column">
+
+  <sc-if value="{{ promoBar }}" hint-placeholder-val="{{ true }}">
+  <div style="background:#232320; color:#F2EEE7; font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; padding:10px 24px; display:flex; justify-content:center; gap:12px 30px; align-items:center; flex-wrap:wrap; text-align:center">
+    <span>Pronta entrega · postamos no mesmo dia</span>
+    <span style="opacity:.3">/</span>
+    <span>Frete grátis acima de R$ 249</span>
+    <span style="opacity:.3">/</span>
+    <span>Retirada grátis em Várzea Alegre</span>
+  </div>
+  </sc-if>
+
+  <header style="position:sticky; top:0; z-index:60; background:rgba(242,238,231,.93); backdrop-filter:blur(14px); border-bottom:1px solid #DFD8CB">
+    <div style="max-width:1340px; margin:0 auto; padding:14px 28px; display:flex; align-items:center; flex-wrap:wrap; gap:12px 30px">
+      <a href="#" onClick="{{ goHome }}" style="display:flex; align-items:center; gap:11px; cursor:pointer; margin-right:auto">
+        <img src="assets/ozzi-logo.png" alt="Ozzi" style="width:44px; height:44px; object-fit:contain; mix-blend-mode:multiply">
+        <span style="display:flex; flex-direction:column; gap:3px">
+          <span style="font-size:23px; font-weight:200; letter-spacing:.34em; text-indent:.34em; line-height:1">OZZI</span>
+          <span style="font-size:7.5px; font-weight:400; letter-spacing:.2em; color:#6B665C; line-height:1">FEMININE FASHION &amp; ACCESSORIES</span>
+        </span>
+      </a>
+
+      <nav style="display:flex; gap:24px; flex-wrap:wrap; font-size:12px; letter-spacing:.12em; text-transform:uppercase">
+        <sc-for list="{{ menu }}" as="m" hint-placeholder-count="5">
+          <a href="#" onClick="{{ goCategory }}" style="cursor:pointer; padding-bottom:3px; border-bottom:1px solid transparent" style-hover="border-bottom:1px solid #232320">{{ m.label }}</a>
+        </sc-for>
+        <a href="#" onClick="{{ goAbout }}" style="cursor:pointer; padding-bottom:3px; border-bottom:1px solid transparent" style-hover="border-bottom:1px solid #232320">Sobre nós</a>
+      </nav>
+
+      <div style="display:flex; gap:20px; align-items:center; font-size:12px; letter-spacing:.12em; text-transform:uppercase">
+        <a href="#" onClick="{{ goSearch }}" style="cursor:pointer">Buscar</a>
+        <a href="#" onClick="{{ goLogin }}" style="cursor:pointer">Conta</a>
+        <a href="#" onClick="{{ goCart }}" style="cursor:pointer; display:flex; align-items:center; gap:7px">Sacola
+          <span style="min-width:19px; height:19px; padding:0 5px; border-radius:99px; background:#232320; color:#F2EEE7; font-size:10px; letter-spacing:0; display:inline-flex; align-items:center; justify-content:center">{{ cartCount }}</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div style="flex:1">
+
+  <!-- ════════ HOME ════════ -->
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <main data-screen-label="Home">
+    <section style="max-width:1340px; margin:0 auto; padding:0 28px">
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); border-bottom:1px solid #DFD8CB">
+        <div style="display:flex; flex-direction:column; justify-content:center; padding:clamp(48px,7vw,92px) clamp(0px,4vw,64px) clamp(48px,7vw,92px) 0; min-height:520px">
+          <span style="font-size:10.5px; letter-spacing:.26em; text-transform:uppercase; color:#8A6A4F; margin-bottom:24px">Coleção Alta Estação 2026</span>
+          <h1 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(46px,5.4vw,78px); line-height:.98; letter-spacing:-.015em; margin:0 0 24px; text-wrap:balance">Linho, luz<br><em style="color:#8A6A4F">e o sertão</em><br>em movimento</h1>
+          <p style="font-size:15.5px; line-height:1.72; color:#5C574D; max-width:410px; margin:0 0 38px; text-wrap:pretty">Peças escolhidas uma a uma por quem mora aqui, no Centro de Várzea Alegre. O que está no site sai hoje do estoque.</p>
+          <div style="display:flex; gap:12px; flex-wrap:wrap">
+            <a href="#" onClick="{{ goCategory }}" style="background:#232320; color:#F2EEE7; padding:16px 32px; font-size:11.5px; letter-spacing:.16em; text-transform:uppercase; cursor:pointer" style-hover="background:#8A6A4F">Comprar pronta entrega</a>
+            <a href="#" onClick="{{ goAbout }}" style="border:1px solid #232320; padding:16px 32px; font-size:11.5px; letter-spacing:.16em; text-transform:uppercase; cursor:pointer" style-hover="background:#232320; color:#F2EEE7">Conhecer a Ozzi</a>
+          </div>
+        </div>
+        <div style="background:repeating-linear-gradient(135deg,#E7E0D4 0 9px,#DCD4C6 9px 18px); display:flex; align-items:flex-end; justify-content:center; padding:24px; min-height:460px">
+          <span style="font-family:ui-monospace,Menlo,monospace; font-size:10.5px; color:#6B665C; background:#F2EEE7; padding:7px 12px">editorial · look principal · 1040×1300</span>
+        </div>
+      </div>
+    </section>
+
+    <section style="max-width:1340px; margin:0 auto; padding:60px 28px 0">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; gap:20px; flex-wrap:wrap; margin-bottom:26px">
+        <h2 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:36px; margin:0">Categorias</h2>
+        <a href="#" onClick="{{ goCategory }}" style="font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; border-bottom:1px solid #232320; padding-bottom:3px; cursor:pointer">Ver tudo</a>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:16px">
+        <sc-for list="{{ categories }}" as="cat" hint-placeholder-count="8">
+          <a href="#" onClick="{{ goCategory }}" style="cursor:pointer; display:block">
+            <div style="aspect-ratio:3/4; background:repeating-linear-gradient(135deg,#E7E0D4 0 9px,#DCD4C6 9px 18px); display:flex; align-items:flex-end; padding:14px" style-hover="filter:brightness(.965)">
+              <span style="font-family:ui-monospace,Menlo,monospace; font-size:9.5px; color:#6B665C; background:#F2EEE7; padding:5px 8px">{{ cat.slot }}</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:baseline; gap:10px; padding:12px 2px 0">
+              <span style="font-family:'Cormorant Garamond',serif; font-size:22px">{{ cat.name }}</span>
+              <span style="font-size:10.5px; letter-spacing:.1em; color:#8A8375">{{ cat.count }}</span>
+            </div>
+          </a>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="max-width:1340px; margin:0 auto; padding:76px 28px 0">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; gap:20px; flex-wrap:wrap; margin-bottom:26px">
+        <div>
+          <span style="font-size:10.5px; letter-spacing:.26em; text-transform:uppercase; color:#8A6A4F">Pronta entrega</span>
+          <h2 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:36px; margin:8px 0 0">Favoritos da casa</h2>
+        </div>
+        <a href="#" onClick="{{ goCategory }}" style="font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; border-bottom:1px solid #232320; padding-bottom:3px; cursor:pointer">Todos os produtos</a>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:22px 16px">
+        <sc-for list="{{ featured }}" as="p" hint-placeholder-count="4">
+          <div style="display:flex; flex-direction:column">
+            <a href="#" onClick="{{ openProduct }}" style="cursor:pointer; position:relative; display:block">
+              <div style="aspect-ratio:3/4; background:repeating-linear-gradient(135deg,#E7E0D4 0 9px,#DCD4C6 9px 18px); display:flex; align-items:flex-end; padding:13px">
+                <span style="font-family:ui-monospace,Menlo,monospace; font-size:9.5px; color:#6B665C; background:#F2EEE7; padding:5px 8px">{{ p.slot }}</span>
+              </div>
+              <sc-if value="{{ p.tag }}">
+                <span style="position:absolute; top:13px; left:13px; background:#232320; color:#F2EEE7; font-size:9px; letter-spacing:.16em; text-transform:uppercase; padding:6px 9px">{{ p.tag }}</span>
+              </sc-if>
+            </a>
+            <div style="padding:13px 2px 0; display:flex; flex-direction:column; gap:5px">
+              <span style="font-size:14.5px">{{ p.name }}</span>
+              <span style="font-size:11px; letter-spacing:.06em; color:#8A8375">{{ p.colors }}</span>
+              <span style="font-family:'Cormorant Garamond',serif; font-size:21px">{{ p.price }}</span>
+              <sc-if value="{{ showInstallments }}" hint-placeholder-val="{{ true }}">
+                <span style="font-size:11px; color:#8A8375">{{ p.installments }}</span>
+              </sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="max-width:1340px; margin:76px auto 0; padding:0 28px">
+      <div style="background:#232320; color:#F2EEE7; display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr))">
+        <div style="padding:clamp(40px,5vw,64px) clamp(28px,4vw,56px)">
+          <span style="font-size:10.5px; letter-spacing:.26em; text-transform:uppercase; color:#C4A88B">Só em Várzea Alegre</span>
+          <h2 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(32px,3.4vw,44px); line-height:1.06; margin:16px 0 18px">Prove em casa<br>antes de pagar</h2>
+          <p style="font-size:15px; line-height:1.72; color:#B3ADA0; max-width:420px; margin:0 0 28px; text-wrap:pretty">Na cidade e na região, levamos até três peças para você experimentar com calma. Você paga só o que ficar.</p>
+          <a href="#" onClick="{{ goAbout }}" style="border:1px solid #F2EEE7; color:#F2EEE7; padding:15px 30px; font-size:11.5px; letter-spacing:.16em; text-transform:uppercase; display:inline-block; cursor:pointer" style-hover="background:#F2EEE7; color:#232320">Como funciona</a>
+        </div>
+        <div style="background:repeating-linear-gradient(135deg,#2C2A25 0 9px,#232120 9px 18px); display:flex; align-items:flex-end; justify-content:center; padding:22px; min-height:320px">
+          <span style="font-family:ui-monospace,Menlo,monospace; font-size:10.5px; color:#B3ADA0; border:1px solid #4A463D; padding:7px 12px">look da coleção · 900×760</span>
+        </div>
+      </div>
+    </section>
+
+    <section style="max-width:1340px; margin:0 auto; padding:76px 28px 92px">
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1px">
+        <sc-for list="{{ perks }}" as="k" hint-placeholder-count="4">
+          <div style="background:#F2EEE7; box-shadow:0 0 0 1px #DFD8CB; padding:30px 24px">
+            <span style="font-family:'Cormorant Garamond',serif; font-size:14px; letter-spacing:.2em; color:#8A6A4F">{{ k.no }}</span>
+            <h3 style="font-size:13px; letter-spacing:.08em; text-transform:uppercase; font-weight:500; margin:13px 0 8px">{{ k.title }}</h3>
+            <p style="font-size:13.5px; line-height:1.65; color:#5C574D; margin:0; text-wrap:pretty">{{ k.body }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+  </main>
+  </sc-if>
+
+  <!-- ════════ CATEGORIA ════════ -->
+  <sc-if value="{{ isCategory }}">
+  <main data-screen-label="Categoria" style="max-width:1340px; margin:0 auto; padding:24px 28px 92px">
+    <div style="font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#8A8375; margin-bottom:24px">
+      <a href="#" onClick="{{ goHome }}" style="cursor:pointer">Início</a> / Vestidos
+    </div>
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; gap:20px; flex-wrap:wrap; border-bottom:1px solid #DFD8CB; padding-bottom:20px; margin-bottom:28px">
+      <div>
+        <h1 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(38px,4.4vw,52px); margin:0">Vestidos</h1>
+        <p style="font-size:14px; color:#5C574D; margin:8px 0 0">64 peças em pronta entrega · numeração P ao GG</p>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center; font-size:11.5px; letter-spacing:.1em; text-transform:uppercase">
+        <span style="color:#8A8375">Ordenar</span>
+        <select style="font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; background:transparent; border:1px solid #C9C0B1; padding:10px 13px">
+          <option>Relevância</option>
+          <option>Menor preço</option>
+          <option>Maior preço</option>
+          <option>Novidades</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr)); gap:40px; align-items:start">
+      <aside style="display:flex; flex-direction:column; gap:28px; max-width:250px">
+        <sc-for list="{{ filters }}" as="f" hint-placeholder-count="4">
+          <div>
+            <h3 style="font-size:11px; letter-spacing:.16em; text-transform:uppercase; font-weight:500; margin:0 0 13px; padding-bottom:10px; border-bottom:1px solid #DFD8CB">{{ f.label }}</h3>
+            <div style="display:flex; flex-direction:column; gap:10px">
+              <sc-for list="{{ f.items }}" as="it" hint-placeholder-count="4">
+                <label style="display:flex; align-items:center; gap:10px; font-size:13.5px; color:#3E3B34; cursor:pointer">
+                  <span style="width:12px; height:12px; border:1px solid #A79C89; flex-shrink:0"></span>
+                  <span style="flex:1">{{ it.n }}</span>
+                  <span style="font-size:10.5px; color:#9A9385">{{ it.c }}</span>
+                </label>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+        <div style="border:1px solid #DFD8CB; padding:18px">
+          <h3 style="font-family:'Cormorant Garamond',serif; font-size:20px; margin:0 0 7px">Prova em casa</h3>
+          <p style="font-size:12.5px; line-height:1.6; color:#5C574D; margin:0">Em Várzea Alegre e região, levamos até 3 peças para você provar antes de pagar.</p>
+        </div>
+      </aside>
+
+      <div style="grid-column:span 3; min-width:0">
+        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:26px 18px">
+          <sc-for list="{{ grid }}" as="p" hint-placeholder-count="9">
+            <div style="display:flex; flex-direction:column">
+              <a href="#" onClick="{{ openProduct }}" style="cursor:pointer; position:relative; display:block">
+                <div style="aspect-ratio:3/4; background:repeating-linear-gradient(135deg,#E7E0D4 0 9px,#DCD4C6 9px 18px); display:flex; align-items:flex-end; padding:13px">
+                  <span style="font-family:ui-monospace,Menlo,monospace; font-size:9.5px; color:#6B665C; background:#F2EEE7; padding:5px 8px">{{ p.slot }}</span>
+                </div>
+                <sc-if value="{{ p.tag }}">
+                  <span style="position:absolute; top:13px; left:13px; background:#232320; color:#F2EEE7; font-size:9px; letter-spacing:.16em; text-transform:uppercase; padding:6px 9px">{{ p.tag }}</span>
+                </sc-if>
+              </a>
+              <div style="padding:13px 2px 0; display:flex; flex-direction:column; gap:5px">
+                <span style="font-size:14.5px">{{ p.name }}</span>
+                <span style="font-size:11px; letter-spacing:.06em; color:#8A8375">{{ p.colors }}</span>
+                <span style="font-family:'Cormorant Garamond',serif; font-size:21px">{{ p.price }}</span>
+                <sc-if value="{{ showInstallments }}" hint-placeholder-val="{{ true }}">
+                  <span style="font-size:11px; color:#8A8375">{{ p.installments }}</span>
+                </sc-if>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex; justify-content:center; margin-top:48px">
+          <a href="#" style="border:1px solid #232320; padding:15px 38px; font-size:11.5px; letter-spacing:.16em; text-transform:uppercase; cursor:pointer" style-hover="background:#232320; color:#F2EEE7">Carregar mais 24</a>
+        </div>
+      </div>
+    </div>
+  </main>
+  </sc-if>
+
+  <!-- ════════ PRODUTO ════════ -->
+  <sc-if value="{{ isProduct }}">
+  <main data-screen-label="Produto" style="max-width:1340px; margin:0 auto; padding:24px 28px 92px">
+    <div style="font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#8A8375; margin-bottom:24px">
+      <a href="#" onClick="{{ goHome }}" style="cursor:pointer">Início</a> / <a href="#" onClick="{{ goCategory }}" style="cursor:pointer">Vestidos</a> / Vestido Serrote
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr)); gap:clamp(28px,4vw,60px); align-items:start">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; min-width:0">
+        <sc-for list="{{ gallery }}" as="g" hint-placeholder-count="4">
+          <div style="aspect-ratio:3/4; background:repeating-linear-gradient(135deg,#E7E0D4 0 9px,#DCD4C6 9px 18px); display:flex; align-items:flex-end; padding:13px">
+            <span style="font-family:ui-monospace,Menlo,monospace; font-size:9.5px; color:#6B665C; background:#F2EEE7; padding:5px 8px">{{ g.slot }}</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:flex; flex-direction:column; position:sticky; top:120px">
+        <span style="font-size:10.5px; letter-spacing:.24em; text-transform:uppercase; color:#8A6A4F">Pronta entrega</span>
+        <h1 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(34px,3.6vw,46px); line-height:1.08; margin:12px 0 6px">Vestido Serrote</h1>
+        <p style="font-size:13.5px; color:#8A8375; margin:0 0 22px; letter-spacing:.04em">Linho misto · Ref. OZ-1042</p>
+
+        <div style="display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; padding-bottom:8px">
+          <span style="font-family:'Cormorant Garamond',serif; font-size:38px">R$ 289,90</span>
+          <span style="font-size:13.5px; color:#8A8375; text-decoration:line-through">R$ 349,90</span>
+        </div>
+        <p style="font-size:13.5px; color:#5C574D; margin:0 0 4px"><strong style="font-weight:500">R$ 275,40</strong> no PIX (5% de desconto)</p>
+        <p style="font-size:13.5px; color:#8A8375; margin:0 0 26px">ou 6x de R$ 48,32 sem juros no cartão</p>
+
+        <div style="border-top:1px solid #DFD8CB; padding-top:22px">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px">
+            <span style="font-size:11px; letter-spacing:.16em; text-transform:uppercase; font-weight:500">Cor · {{ chosenColor }}</span>
+          </div>
+          <div style="display:flex; gap:10px; margin-bottom:26px">
+            <sc-for list="{{ colorOpts }}" as="c" hint-placeholder-count="3">
+              <a href="#" onClick="{{ c.pick }}" title="{{ c.name }}" style="width:46px; height:46px; border:1px solid #C9C0B1; cursor:pointer; display:block; background:{{ c.hex }}"></a>
+            </sc-for>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px; gap:14px; flex-wrap:wrap">
+            <span style="font-size:11px; letter-spacing:.16em; text-transform:uppercase; font-weight:500">Tamanho</span>
+            <a href="#" style="font-size:11.5px; color:#8A6A4F; border-bottom:1px solid #C4A88B; cursor:pointer">Tabela de medidas</a>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px">
+            <sc-for list="{{ sizeOpts }}" as="s" hint-placeholder-count="5">
+              <a href="#" onClick="{{ s.pick }}" style="min-width:52px; padding:13px 6px; text-align:center; font-size:13px; letter-spacing:.06em; cursor:pointer; border:1px solid {{ s.border }}; background:{{ s.bg }}; color:{{ s.fg }}">{{ s.label }}</a>
+            </sc-for>
+          </div>
+          <p style="font-size:12px; color:#8A8375; margin:0 0 24px">{{ sizeNote }}</p>
+
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px">
+            <a href="#" onClick="{{ addToCart }}" style="flex:1 1 220px; text-align:center; background:#232320; color:#F2EEE7; padding:18px 24px; font-size:11.5px; letter-spacing:.16em; text-transform:uppercase; cursor:pointer" style-hover="background:#8A6A4F">Adicionar à sacola</a>
+            <a href="#" onClick="{{ goCheckout }}" style="flex:1 1 140px; text-align:center; border:1px solid #232320; padding:18px 24px; font-size:11.5px; letter-spacing:.16em; text-transform:uppercase; cursor:pointer" style-hover="background:#232320; color:#F2EEE7">Comprar agora</a>
+          </div>
+          <sc-if value="{{ showWhatsapp }}" hint-placeholder-val="{{ true }}">
+            <a href="#" style="display:block; text-align:center; border:1px solid #C9C0B1; padding:14px; font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:#5C574D; cursor:pointer" style-hover="border-color:#232320; color:#232320">Tirar dúvida no WhatsApp</a>
+          </sc-if>
+        </div>
+
+        <div style="border-top:1px solid #DFD8CB; margin-top:26px">
+          <sc-for list="{{ accordion }}" as="a" hint-placeholder-count="4">
+            <div style="border-bottom:1px solid #DFD8CB; padding:18px 0">
+              <div style="display:flex; justify-content:space-between; align-items:center; gap:16px">
+                <h3 style="font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; font-weight:500; margin:0">{{ a.title }}</h3>
+                <span style="font-size:16px; color:#8A8375; line-height:1">{{ a.sign }}</span>
+              </div>
+              <p style="font-size:13.5px; line-height:1.7; color:#5C574D; margin:12px 0 0; text-wrap:pretty">{{ a.body }}</p>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+
+    <section style="padding-top:76px">
+      <h2 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:34px; margin:0 0 24px">Combina com</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:22px 16px">
+        <sc-for list="{{ featured }}" as="p" hint-placeholder-count="4">
+          <div style="display:flex; flex-direction:column">
+            <a href="#" onClick="{{ openProduct }}" style="cursor:pointer; display:block">
+              <div style="aspect-ratio:3/4; background:repeating-linear-gradient(135deg,#E7E0D4 0 9px,#DCD4C6 9px 18px); display:flex; align-items:flex-end; padding:13px">
+                <span style="font-family:ui-monospace,Menlo,monospace; font-size:9.5px; color:#6B665C; background:#F2EEE7; padding:5px 8px">{{ p.slot }}</span>
+              </div>
+            </a>
+            <div style="padding:13px 2px 0; display:flex; flex-direction:column; gap:5px">
+              <span style="font-size:14.5px">{{ p.name }}</span>
+              <span style="font-family:'Cormorant Garamond',serif; font-size:21px">{{ p.price }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+  </main>
+  </sc-if>
+
+  <!-- ════════ BUSCA ════════ -->
+  <sc-if value="{{ isSearch }}">
+  <main data-screen-label="Busca" style="max-width:1000px; margin:0 auto; padding:56px 28px 92px">
+    <h1 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(34px,4vw,46px); margin:0 0 22px">O que você procura?</h1>
+    <div style="display:flex; align-items:center; gap:14px; border-bottom:1px solid #232320; padding-bottom:14px; margin-bottom:36px">
+      <input value="{{ query }}" onChange="{{ setQuery }}" placeholder="vestido de linho, conjunto alfaiataria..." style="flex:1; border:none; background:transparent; font-size:clamp(20px,2.4vw,28px); font-weight:300; padding:0">
+      <span style="font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:#8A8375">{{ resultCount }}</span>
+    </div>
+
+    <div style="display:flex; gap:26px; flex-wrap:wrap; margin-bottom:44px">
+      <div style="flex:1 1 220px">
+        <h3 style="font-size:11px; letter-spacing:.16em; text-transform:uppercase; font-weight:500; color:#8A8375; margin:0 0 14px">Mais buscados</h3>
+        <div style="display:flex; flex-wrap:wrap; gap:8px">
+          <sc-for list="{{ suggestions }}" as="s" hint-placeholder-count="6">
+            <a href="#" onClick="{{ goCategory }}" style="border:1px solid #C9C0B1; padding:9px 15px; font-size:12.5px; cursor:pointer" style-hover="border-color:#232320; background:#E9E3D9">{{ s.term }}</a>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="font-size:11px; letter-spacing:.16em; text-transform:uppercase; font-weight:500; color:#8A8375; margin:0 0 18px; padding-bottom:12px; border-bottom:1px solid #DFD8CB">Resultados para “{{ query }}”</h3>
+    <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:24px 16px">
+      <sc-for list="{{ searchResults }}" as="p" hint-placeholder-count="6">
+        <div style="display:flex; flex-direction:column">
+          <a href="#" onClick="{{ openProduct }}" style="cursor:pointer; display:block">
+            <div style="aspect-ratio:3/4; background:repeating-linear-gradient(135deg,#E7E0D4 0 9px,#DCD4C6 9px 18px); display:flex; align-items:flex-end; padding:12px">
+              <span style="font-family:ui-monospace,Menlo,monospace; font-size:9.5px; color:#6B665C; background:#F2EEE7; padding:5px 8px">{{ p.slot }}</span>
+            </div>
+          </a>
+          <div style="padding:12px 2px 0; display:flex; flex-direction:column; gap:5px">
+            <span style="font-size:14px">{{ p.name }}</span>
+            <span style="font-family:'Cormorant Garamond',serif; font-size:20px">{{ p.price }}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </main>
+  </sc-if>
+
+  <!-- ════════ SACOLA ════════ -->
+  <sc-if value="{{ isCart }}">
+  <main data-screen-label="Sacola" style="max-width:1180px; margin:0 auto; padding:44px 28px 92px">
+    <h1 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(36px,4vw,48px); margin:0 0 30px">Sua sacola</h1>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:44px; align-items:start">
+      <div style="grid-column:span 2; min-width:0; border-top:1px solid #DFD8CB">
+        <sc-for list="{{ cart }}" as="i" hint-placeholder-count="3">
+          <div style="display:flex; gap:20px; padding:22px 0; border-bottom:1px solid #DFD8CB; flex-wrap:wrap">
+            <div style="width:108px; aspect-ratio:3/4; background:repeating-linear-gradient(135deg,#E7E0D4 0 9px,#DCD4C6 9px 18px); flex-shrink:0"></div>
+            <div style="flex:1 1 200px; display:flex; flex-direction:column; gap:6px">
+              <span style="font-size:16px">{{ i.name }}</span>
+              <span style="font-size:12.5px; color:#8A8375">{{ i.variant }}</span>
+              <span style="font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:#8A6A4F">{{ i.status }}</span>
+              <div style="display:flex; gap:14px; margin-top:8px; font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:#8A8375">
+                <a href="#" style="cursor:pointer; border-bottom:1px solid #C9C0B1">Editar</a>
+                <a href="#" onClick="{{ removeItem }}" style="cursor:pointer; border-bottom:1px solid #C9C0B1">Remover</a>
+              </div>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:12px">
+              <span style="font-family:'Cormorant Garamond',serif; font-size:22px">{{ i.total }}</span>
+              <div style="display:flex; align-items:center; border:1px solid #C9C0B1">
+                <a href="#" onClick="{{ i.dec }}" style="padding:8px 13px; cursor:pointer; font-size:14px">−</a>
+                <span style="padding:8px 4px; font-size:13px; min-width:22px; text-align:center">{{ i.qty }}</span>
+                <a href="#" onClick="{{ i.inc }}" style="padding:8px 13px; cursor:pointer; font-size:14px">+</a>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+        <a href="#" onClick="{{ goCategory }}" style="display:inline-block; margin-top:24px; font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; border-bottom:1px solid #232320; padding-bottom:3px; cursor:pointer">Continuar comprando</a>
+      </div>
+
+      <div style="background:#FAF7F2; border:1px solid #DFD8CB; padding:28px 26px; position:sticky; top:120px">
+        <h2 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:26px; margin:0 0 20px">Resumo</h2>
+        <div style="display:flex; flex-direction:column; gap:11px; font-size:13.5px; color:#5C574D; padding-bottom:18px; border-bottom:1px solid #DFD8CB">
+          <div style="display:flex; justify-content:space-between"><span>Subtotal</span><span style="color:#232320">{{ subtotal }}</span></div>
+          <div style="display:flex; justify-content:space-between"><span>Frete · {{ shipLabel }}</span><span style="color:#232320">{{ shipValue }}</span></div>
+          <div style="display:flex; justify-content:space-between"><span>Desconto PIX (5%)</span><span style="color:#8A6A4F">−{{ pixDiscount }}</span></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:baseline; padding:18px 0 4px">
+          <span style="font-size:11.5px; letter-spacing:.14em; text-transform:uppercase">Total no PIX</span>
+          <span style="font-family:'Cormorant Garamond',serif; font-size:30px">{{ pixTotal }}</span>
+        </div>
+        <p style="font-size:12.5px; color:#8A8375; margin:0 0 22px">ou {{ cardTotal }} em até 6x sem juros</p>
+
+        <div style="margin-bottom:20px">
+          <h3 style="font-size:11px; letter-spacing:.16em; text-transform:uppercase; font-weight:500; margin:0 0 10px">Entrega</h3>
+          <div style="display:flex; flex-direction:column; gap:8px">
+            <sc-for list="{{ shipOpts }}" as="s" hint-placeholder-count="3">
+              <a href="#" onClick="{{ s.pick }}" style="display:flex; justify-content:space-between; gap:12px; align-items:center; padding:12px 14px; font-size:13px; cursor:pointer; border:1px solid {{ s.border }}; background:{{ s.bg }}">
+                <span style="display:flex; flex-direction:column; gap:3px">
+                  <span>{{ s.name }}</span>
+                  <span style="font-size:11.5px; color:#8A8375">{{ s.eta }}</span>
+                </span>
+                <span>{{ s.price }}</span>
+              </a>
+            </sc-for>
+          </div>
+        </div>
+
+        <a href="#" onClick="{{ goCheckout }}" style="display:block; text-align:center; background:#232320; color:#F2EEE7; padding:18px; font-size:11.5px; letter-spacing:.16em; text-transform:uppercase; cursor:pointer" style-hover="background:#8A6A4F">Finalizar compra</a>
+        <p style="font-size:11.5px; color:#8A8375; margin:14px 0 0; text-align:center; line-height:1.6">Compra protegida · troca grátis em 7 dias</p>
+      </div>
+    </div>
+  </main>
+  </sc-if>
+
+  <!-- ════════ CHECKOUT ════════ -->
+  <sc-if value="{{ isCheckout }}">
+  <main data-screen-label="Checkout" style="max-width:1180px; margin:0 auto; padding:44px 28px 92px">
+    <div style="display:flex; gap:10px 26px; flex-wrap:wrap; align-items:center; margin-bottom:34px; font-size:11px; letter-spacing:.14em; text-transform:uppercase">
+      <sc-for list="{{ steps }}" as="st" hint-placeholder-count="3">
+        <span style="display:flex; align-items:center; gap:9px; color:{{ st.color }}">
+          <span style="width:22px; height:22px; border-radius:99px; border:1px solid {{ st.color }}; display:inline-flex; align-items:center; justify-content:center; font-size:10.5px">{{ st.no }}</span>
+          {{ st.label }}
+        </span>
+      </sc-for>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:44px; align-items:start">
+      <div style="grid-column:span 2; min-width:0; display:flex; flex-direction:column; gap:38px">
+        <section>
+          <h2 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:28px; margin:0 0 20px">Entrega</h2>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px">
+            <sc-for list="{{ fields }}" as="f" hint-placeholder-count="6">
+              <label style="display:flex; flex-direction:column; gap:7px; grid-column:span {{ f.span }}">
+                <span style="font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:#8A8375">{{ f.label }}</span>
+                <input value="{{ f.value }}" style="border:1px solid #C9C0B1; background:#FAF7F2; padding:13px 14px; font-size:14px">
+              </label>
+            </sc-for>
+          </div>
+        </section>
+
+        <section>
+          <h2 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:28px; margin:0 0 20px">Pagamento</h2>
+          <div style="display:flex; flex-direction:column; gap:10px">
+            <sc-for list="{{ payOpts }}" as="p" hint-placeholder-count="4">
+              <a href="#" onClick="{{ p.pick }}" style="display:block; padding:16px 18px; cursor:pointer; border:1px solid {{ p.border }}; background:{{ p.bg }}">
+                <span style="display:flex; justify-content:space-between; gap:14px; align-items:baseline; flex-wrap:wrap">
+                  <span style="font-size:14.5px">{{ p.name }}</span>
+                  <span style="font-size:13.5px; color:#8A6A4F">{{ p.note }}</span>
+                </span>
+                <span style="display:block; font-size:12.5px; color:#8A8375; margin-top:5px">{{ p.detail }}</span>
+              </a>
+            </sc-for>
+          </div>
+        </section>
+      </div>
+
+      <div style="background:#FAF7F2; border:1px solid #DFD8CB; padding:28px 26px; position:sticky; top:120px">
+        <h2 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:26px; margin:0 0 18px">Seu pedido</h2>
+        <div style="display:flex; flex-direction:column; gap:14px; padding-bottom:18px; border-bottom:1px solid #DFD8CB">
+          <sc-for list="{{ cart }}" as="i" hint-placeholder-count="3">
+            <div style="display:flex; gap:12px; align-items:flex-start">
+              <div style="width:52px; aspect-ratio:3/4; background:repeating-linear-gradient(135deg,#E7E0D4 0 9px,#DCD4C6 9px 18px); flex-shrink:0"></div>
+              <div style="flex:1; display:flex; flex-direction:column; gap:3px">
+                <span style="font-size:13.5px">{{ i.name }}</span>
+                <span style="font-size:11.5px; color:#8A8375">{{ i.variant }} · {{ i.qty }}un</span>
+              </div>
+              <span style="font-size:13.5px">{{ i.total }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#5C574D; padding:18px 0; border-bottom:1px solid #DFD8CB">
+          <div style="display:flex; justify-content:space-between"><span>Subtotal</span><span style="color:#232320">{{ subtotal }}</span></div>
+          <div style="display:flex; justify-content:space-between"><span>Frete</span><span style="color:#232320">{{ shipValue }}</span></div>
+          <div style="display:flex; justify-content:space-between"><span>{{ payDiscountLabel }}</span><span style="color:#8A6A4F">−{{ pixDiscount }}</span></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:baseline; padding:18px 0 22px">
+          <span style="font-size:11.5px; letter-spacing:.14em; text-transform:uppercase">Total</span>
+          <span style="font-family:'Cormorant Garamond',serif; font-size:30px">{{ pixTotal }}</span>
+        </div>
+        <a href="#" onClick="{{ goOrders }}" style="display:block; text-align:center; background:#232320; color:#F2EEE7; padding:18px; font-size:11.5px; letter-spacing:.16em; text-transform:uppercase; cursor:pointer" style-hover="background:#8A6A4F">Confirmar pedido</a>
+        <sc-if value="{{ showWhatsapp }}" hint-placeholder-val="{{ true }}">
+          <p style="font-size:12px; color:#8A8375; margin:14px 0 0; text-align:center; line-height:1.6">Prefere fechar pelo WhatsApp? <a href="#" style="border-bottom:1px solid #C9C0B1; cursor:pointer">Chamar a loja</a></p>
+        </sc-if>
+      </div>
+    </div>
+  </main>
+  </sc-if>
+
+  <!-- ════════ CONTA / LOGIN ════════ -->
+  <sc-if value="{{ isLogin }}">
+  <main data-screen-label="Login" style="max-width:1180px; margin:0 auto; padding:56px 28px 92px">
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:clamp(28px,4vw,60px); align-items:start">
+      <div>
+        <h1 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(34px,4vw,46px); margin:0 0 12px">Entrar</h1>
+        <p style="font-size:14.5px; color:#5C574D; line-height:1.7; margin:0 0 30px">Acompanhe pedidos, salve favoritos e finalize a compra mais rápido.</p>
+        <div style="display:flex; flex-direction:column; gap:16px; max-width:420px">
+          <label style="display:flex; flex-direction:column; gap:7px">
+            <span style="font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:#8A8375">E-mail ou CPF</span>
+            <input style="border:1px solid #C9C0B1; background:#FAF7F2; padding:14px; font-size:14px">
+          </label>
+          <label style="display:flex; flex-direction:column; gap:7px">
+            <span style="font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:#8A8375">Senha</span>
+            <input type="password" style="border:1px solid #C9C0B1; background:#FAF7F2; padding:14px; font-size:14px">
+          </label>
+          <a href="#" style="font-size:12.5px; color:#8A6A4F; align-self:flex-start; border-bottom:1px solid #C4A88B; cursor:pointer">Esqueci minha senha</a>
+          <a href="#" onClick="{{ goOrders }}" style="text-align:center; background:#232320; color:#F2EEE7; padding:17px; font-size:11.5px; letter-spacing:.16em; text-transform:uppercase; cursor:pointer; margin-top:6px" style-hover="background:#8A6A4F">Entrar</a>
+          <a href="#" style="text-align:center; border:1px solid #C9C0B1; padding:16px; font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:#5C574D; cursor:pointer" style-hover="border-color:#232320; color:#232320">Criar minha conta</a>
+        </div>
+      </div>
+      <div style="background:#FAF7F2; border:1px solid #DFD8CB; padding:clamp(28px,3vw,40px)">
+        <span style="font-size:10.5px; letter-spacing:.24em; text-transform:uppercase; color:#8A6A4F">Clube Ozzi</span>
+        <h2 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:32px; line-height:1.12; margin:14px 0 16px">Quem é de casa<br>ganha primeiro</h2>
+        <div style="display:flex; flex-direction:column; gap:14px; margin-top:22px">
+          <sc-for list="{{ clubPerks }}" as="c" hint-placeholder-count="3">
+            <div style="display:flex; gap:12px; align-items:baseline; padding-bottom:14px; border-bottom:1px solid #E4DDD1">
+              <span style="font-family:'Cormorant Garamond',serif; font-size:14px; color:#8A6A4F; letter-spacing:.14em">{{ c.no }}</span>
+              <span style="font-size:13.5px; line-height:1.65; color:#5C574D; text-wrap:pretty">{{ c.body }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </main>
+  </sc-if>
+
+  <!-- ════════ MEUS PEDIDOS ════════ -->
+  <sc-if value="{{ isOrders }}">
+  <main data-screen-label="Meus pedidos" style="max-width:1180px; margin:0 auto; padding:44px 28px 92px">
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr)); gap:44px; align-items:start">
+      <aside style="max-width:230px">
+        <div style="padding-bottom:20px; border-bottom:1px solid #DFD8CB; margin-bottom:20px">
+          <p style="font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8A8375; margin:0 0 6px">Olá,</p>
+          <p style="font-family:'Cormorant Garamond',serif; font-size:26px; margin:0">Maria Eduarda</p>
+        </div>
+        <nav style="display:flex; flex-direction:column; gap:13px; font-size:13px; letter-spacing:.06em">
+          <sc-for list="{{ accountNav }}" as="n" hint-placeholder-count="5">
+            <a href="#" style="cursor:pointer; color:{{ n.color }}">{{ n.label }}</a>
+          </sc-for>
+        </nav>
+      </aside>
+
+      <div style="grid-column:span 3; min-width:0">
+        <h1 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(32px,3.6vw,42px); margin:0 0 26px">Meus pedidos</h1>
+        <div style="display:flex; flex-direction:column; gap:16px">
+          <sc-for list="{{ orders }}" as="o" hint-placeholder-count="3">
+            <div style="border:1px solid #DFD8CB; background:#FAF7F2">
+              <div style="display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; padding:16px 20px; border-bottom:1px solid #DFD8CB; font-size:12px; letter-spacing:.08em">
+                <span style="color:#8A8375">Pedido {{ o.id }} · {{ o.date }}</span>
+                <span style="text-transform:uppercase; letter-spacing:.14em; color:{{ o.statusColor }}">{{ o.status }}</span>
+              </div>
+              <div style="padding:20px; display:flex; gap:18px; flex-wrap:wrap; align-items:center">
+                <div style="display:flex; gap:8px">
+                  <sc-for list="{{ o.thumbs }}" as="t" hint-placeholder-count="2">
+                    <div style="width:56px; aspect-ratio:3/4; background:repeating-linear-gradient(135deg,#E7E0D4 0 9px,#DCD4C6 9px 18px)"></div>
+                  </sc-for>
+                </div>
+                <div style="flex:1 1 200px; display:flex; flex-direction:column; gap:5px">
+                  <span style="font-size:14px">{{ o.items }}</span>
+                  <span style="font-size:12.5px; color:#8A8375">{{ o.delivery }}</span>
+                </div>
+                <span style="font-family:'Cormorant Garamond',serif; font-size:24px">{{ o.total }}</span>
+                <a href="#" style="border:1px solid #232320; padding:12px 20px; font-size:11px; letter-spacing:.14em; text-transform:uppercase; cursor:pointer" style-hover="background:#232320; color:#F2EEE7">{{ o.action }}</a>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </main>
+  </sc-if>
+
+  <!-- ════════ SOBRE ════════ -->
+  <sc-if value="{{ isAbout }}">
+  <main data-screen-label="Sobre a loja">
+    <section style="max-width:1340px; margin:0 auto; padding:0 28px">
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); border-bottom:1px solid #DFD8CB">
+        <div style="display:flex; flex-direction:column; justify-content:center; padding:clamp(48px,6vw,84px) clamp(0px,4vw,56px) clamp(48px,6vw,84px) 0">
+          <span style="font-size:10.5px; letter-spacing:.26em; text-transform:uppercase; color:#8A6A4F; margin-bottom:22px">Várzea Alegre · Ceará</span>
+          <h1 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(40px,5vw,66px); line-height:1.02; margin:0 0 22px; text-wrap:balance">Do Centro de<br>Várzea Alegre<br>pro Brasil</h1>
+          <p style="font-size:15.5px; line-height:1.75; color:#5C574D; max-width:440px; margin:0; text-wrap:pretty">A Ozzi começou em 2019 com um perfil no Instagram, um caderno de encomendas e muita conversa no WhatsApp. Hoje atendemos o Cariri inteiro e enviamos para todo o país — sem perder o jeito de vizinha, que sabe o nome de quem chama.</p>
+        </div>
+        <div style="background:repeating-linear-gradient(135deg,#E7E0D4 0 9px,#DCD4C6 9px 18px); display:flex; align-items:flex-end; justify-content:center; padding:24px; min-height:420px">
+          <span style="font-family:ui-monospace,Menlo,monospace; font-size:10.5px; color:#6B665C; background:#F2EEE7; padding:7px 12px">araras da coleção · 1000×1100</span>
+        </div>
+      </div>
+    </section>
+
+    <section style="max-width:1340px; margin:0 auto; padding:64px 28px 0">
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1px">
+        <sc-for list="{{ aboutBlocks }}" as="b" hint-placeholder-count="3">
+          <div style="background:#F2EEE7; box-shadow:0 0 0 1px #DFD8CB; padding:34px 28px">
+            <h3 style="font-family:'Cormorant Garamond',serif; font-weight:400; font-size:24px; margin:0 0 12px">{{ b.title }}</h3>
+            <p style="font-size:14px; line-height:1.7; color:#5C574D; margin:0; text-wrap:pretty">{{ b.body }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="max-width:1340px; margin:0 auto; padding:64px 28px 92px">
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:clamp(28px,4vw,56px); align-items:center">
+        <div>
+          <h2 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:38px; margin:0 0 20px">Fale com a gente</h2>
+          <div style="display:flex; flex-direction:column; gap:16px; font-size:14.5px; line-height:1.7; color:#5C574D">
+            <div>
+              <p style="font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:#8A8375; margin:0 0 4px">Onde estamos</p>
+              <p style="margin:0; color:#232320">Centro, Várzea Alegre - CE<br>Loja online, com entrega local</p>
+            </div>
+            <div>
+              <p style="font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:#8A8375; margin:0 0 4px">Atendimento</p>
+              <p style="margin:0; color:#232320">Seg a sex · 8h às 18h<br>Sábado · 8h às 13h</p>
+            </div>
+            <div>
+              <p style="font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:#8A8375; margin:0 0 4px">Fale com a gente</p>
+              <p style="margin:0; color:#232320">(88) 99999-0000 · @ozzimodafeminina</p>
+            </div>
+          </div>
+        </div>
+        <div style="background:repeating-linear-gradient(135deg,#E7E0D4 0 9px,#DCD4C6 9px 18px); aspect-ratio:4/3; display:flex; align-items:flex-end; justify-content:center; padding:22px">
+          <span style="font-family:ui-monospace,Menlo,monospace; font-size:10.5px; color:#6B665C; background:#F2EEE7; padding:7px 12px">entrega local · 900×680</span>
+        </div>
+      </div>
+    </section>
+  </main>
+  </sc-if>
+
+  </div>
+
+  <footer style="background:#232320; color:#F2EEE7; margin-top:auto">
+    <div style="max-width:1340px; margin:0 auto; padding:60px 28px 30px; display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:40px">
+      <div>
+        <div style="display:flex; align-items:center; gap:11px; margin-bottom:18px">
+          <img src="assets/ozzi-logo.png" alt="Ozzi" style="width:44px; height:44px; object-fit:contain; filter:invert(1) brightness(1.08); opacity:.92">
+          <span style="display:flex; flex-direction:column; gap:3px">
+            <span style="font-size:22px; font-weight:200; letter-spacing:.34em; text-indent:.34em; line-height:1">OZZI</span>
+            <span style="font-size:7.5px; letter-spacing:.2em; color:#8F8A7E; line-height:1">FEMININE FASHION &amp; ACCESSORIES</span>
+          </span>
+        </div>
+        <p style="font-size:13.5px; line-height:1.7; color:#8F8A7E; margin:0; max-width:260px">Centro, Várzea Alegre - CE<br>Atendimento online e entrega local</p>
+      </div>
+      <sc-for list="{{ footerCols }}" as="c" hint-placeholder-count="3">
+        <div>
+          <h4 style="font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; font-weight:500; margin:0 0 16px; color:#C4A88B">{{ c.title }}</h4>
+          <div style="display:flex; flex-direction:column; gap:10px">
+            <sc-for list="{{ c.links }}" as="l" hint-placeholder-count="4">
+              <a href="#" style="font-size:13.5px; color:#B3ADA0; cursor:pointer" style-hover="color:#F2EEE7">{{ l.label }}</a>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="max-width:1340px; margin:0 auto; padding:22px 28px 40px; border-top:1px solid #3A3730; display:flex; justify-content:space-between; gap:14px 26px; flex-wrap:wrap; font-size:11.5px; color:#8F8A7E">
+      <span>© 2026 Ozzi Moda Feminina · CNPJ 00.000.000/0001-00</span>
+      <span>PIX · Cartão em até 6x · Retirada combinada · Correios</span>
+    </div>
+  </footer>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;promoBar&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Loja&quot;},&quot;showInstallments&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Loja&quot;},&quot;showWhatsapp&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Loja&quot;},&quot;gridColumns&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;3&quot;,&quot;4&quot;],&quot;default&quot;:&quot;3&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Catálogo&quot;}}">
+const BRL = n => 'R$ ' + n.toFixed(2).replace('.', ',');
+
+class Component extends DCLogic {
+  state = {
+    screen: 'home',
+    color: 'Areia',
+    size: 'M',
+    query: 'vestido linho',
+    ship: 'retirada',
+    pay: 'pix',
+    qty: { a: 1, b: 1, c: 2 }
+  };
+
+  go = s => e => { if (e) e.preventDefault(); this.setState({ screen: s }); window.scrollTo(0, 0); };
+
+  renderVals() {
+    const st = this.state;
+    const p = this.props;
+    const showInstallments = p.showInstallments ?? true;
+    const cols = p.gridColumns ?? 3;
+
+    const slot = (label, dim) => label + ' · ' + dim;
+
+    const categories = [
+      { name: 'Vestidos', count: '64', slot: slot('vestidos', '520×690') },
+      { name: 'Blusas', count: '48', slot: slot('blusas', '520×690') },
+      { name: 'Calças', count: '37', slot: slot('calças', '520×690') },
+      { name: 'Saias', count: '22', slot: slot('saias', '520×690') },
+      { name: 'Conjuntos', count: '29', slot: slot('conjuntos', '520×690') },
+      { name: 'Moda praia', count: '31', slot: slot('praia', '520×690') },
+      { name: 'Acessórios', count: '56', slot: slot('acessórios', '520×690') },
+      { name: 'Calçados', count: '25', slot: slot('calçados', '520×690') }
+    ];
+
+    const mk = (name, price, colors, tag) => ({
+      name, colors, tag,
+      price: BRL(price),
+      installments: '6x de ' + BRL(price / 6) + ' sem juros',
+      slot: slot(name.toLowerCase(), '520×690')
+    });
+
+    const featured = [
+      mk('Vestido Serrote', 289.9, 'Areia · Preto · Verde oliva', 'Última numeração'),
+      mk('Blusa Cordel', 129.9, 'Off-white · Terracota', null),
+      mk('Conjunto Lavras', 349.9, 'Bege · Chumbo', 'Novidade'),
+      mk('Saia Midi Canoa', 199.9, 'Preto · Caramelo', null)
+    ];
+
+    const grid = [
+      mk('Vestido Serrote', 289.9, 'Areia · Preto · Verde oliva', 'Última numeração'),
+      mk('Vestido Chapada', 259.9, 'Off-white · Areia', null),
+      mk('Vestido Cariri', 319.9, 'Preto · Vinho', 'Novidade'),
+      mk('Vestido Aurora', 279.9, 'Areia · Azul jeans', null),
+      mk('Vestido Riacho', 229.9, 'Verde oliva · Preto', null),
+      mk('Vestido Serena', 339.9, 'Off-white', 'Novidade'),
+      mk('Vestido Ipueiras', 249.9, 'Terracota · Bege', null),
+      mk('Vestido Solar', 299.9, 'Amarelo queimado · Areia', null),
+      mk('Vestido Cacimba', 269.9, 'Chumbo · Areia', 'Última numeração')
+    ];
+
+    const filters = [
+      { label: 'Tamanho', items: [{ n: 'P', c: '18' }, { n: 'M', c: '31' }, { n: 'G', c: '27' }, { n: 'GG', c: '14' }] },
+      { label: 'Cor', items: [{ n: 'Areia', c: '22' }, { n: 'Preto', c: '19' }, { n: 'Off-white', c: '15' }, { n: 'Terracota', c: '9' }] },
+      { label: 'Preço', items: [{ n: 'Até R$ 150', c: '11' }, { n: 'R$ 150 a R$ 250', c: '24' }, { n: 'R$ 250 a R$ 350', c: '21' }, { n: 'Acima de R$ 350', c: '8' }] },
+      { label: 'Disponibilidade', items: [{ n: 'Pronta entrega', c: '58' }, { n: 'Sob encomenda', c: '6' }] }
+    ];
+
+    const colorOpts = ['Areia,#D9CDBA', 'Preto,#26241F', 'Verde oliva,#6E7358'].map(s => {
+      const [name, hex] = s.split(',');
+      return { name, hex, pick: e => { e.preventDefault(); this.setState({ color: name }); } };
+    });
+
+    const stock = { P: true, M: true, G: true, GG: false };
+    const sizeOpts = ['P', 'M', 'G', 'GG'].map(label => {
+      const sel = st.size === label;
+      const has = stock[label];
+      return {
+        label, pick: e => { e.preventDefault(); this.setState({ size: label }); },
+        bg: sel ? '#232320' : has ? 'transparent' : '#E9E3D9',
+        fg: sel ? '#F2EEE7' : has ? '#232320' : '#A79C89',
+        border: sel ? '#232320' : '#C9C0B1'
+      };
+    });
+
+    const cartRaw = [
+      { key: 'a', name: 'Vestido Serrote', variant: 'Areia · M', unit: 289.9, status: 'Pronta entrega' },
+      { key: 'b', name: 'Conjunto Lavras', variant: 'Bege · P', unit: 349.9, status: 'Pronta entrega' },
+      { key: 'c', name: 'Blusa Cordel', variant: 'Terracota · M', unit: 129.9, status: 'Pronta entrega' }
+    ];
+    const cart = cartRaw.map(i => {
+      const q = st.qty[i.key];
+      return {
+        ...i, qty: q, total: BRL(i.unit * q),
+        inc: e => { e.preventDefault(); this.setState(s => ({ qty: { ...s.qty, [i.key]: s.qty[i.key] + 1 } })); },
+        dec: e => { e.preventDefault(); this.setState(s => ({ qty: { ...s.qty, [i.key]: Math.max(1, s.qty[i.key] - 1) } })); }
+      };
+    });
+    const sub = cartRaw.reduce((t, i) => t + i.unit * st.qty[i.key], 0);
+    const ships = {
+      retirada: { name: 'Retirada no Centro', eta: 'Hoje, a combinar · Várzea Alegre', v: 0, label: 'retirada' },
+      motoboy: { name: 'Entrega local · motoboy', eta: 'Hoje até 18h · Várzea Alegre', v: 12, label: 'motoboy' },
+      correios: { name: 'Correios · PAC', eta: '5 a 9 dias úteis', v: 0, label: 'Correios' }
+    };
+    const ship = ships[st.ship];
+    const shipValue = ship.v === 0 ? 'Grátis' : BRL(ship.v);
+    const pixDisc = sub * 0.05;
+
+    const pays = {
+      pix: { name: 'PIX', note: '5% de desconto', detail: 'QR Code na próxima tela · aprovação imediata' },
+      cartao: { name: 'Cartão de crédito', note: 'até 6x sem juros', detail: 'Visa, Master, Elo e Hipercard' },
+      whats: { name: 'Combinar no WhatsApp', note: 'atendimento humano', detail: 'Uma vendedora finaliza o pedido com você' },
+      loja: { name: 'Pagar na retirada', note: 'sem taxa', detail: 'PIX ou dinheiro na hora de receber a peça' }
+    };
+
+    return {
+      isHome: st.screen === 'home',
+      isCategory: st.screen === 'category',
+      isProduct: st.screen === 'product',
+      isSearch: st.screen === 'search',
+      isCart: st.screen === 'cart',
+      isCheckout: st.screen === 'checkout',
+      isLogin: st.screen === 'login',
+      isOrders: st.screen === 'orders',
+      isAbout: st.screen === 'about',
+
+      goHome: this.go('home'), goCategory: this.go('category'), openProduct: this.go('product'),
+      goSearch: this.go('search'), goCart: this.go('cart'), goCheckout: this.go('checkout'),
+      goLogin: this.go('login'), goOrders: this.go('orders'), goAbout: this.go('about'),
+      addToCart: this.go('cart'),
+      removeItem: e => e.preventDefault(),
+
+      promoBar: p.promoBar ?? true,
+      showWhatsapp: p.showWhatsapp ?? true,
+      showInstallments,
+      cartCount: String(Object.values(st.qty).reduce((a, b) => a + b, 0)),
+
+      menu: [{ label: 'Novidades' }, { label: 'Vestidos' }, { label: 'Blusas' }, { label: 'Conjuntos' }],
+      categories, featured,
+      grid: cols === 4 ? grid : grid.slice(0, 9),
+      filters,
+      perks: [
+        { no: 'I', title: 'Pronta entrega', body: 'Tudo que aparece no site está no estoque da loja e sai para postagem no mesmo dia.' },
+        { no: 'II', title: 'Retire no centro', body: 'Combine a retirada no Centro de Várzea Alegre em até 2 horas, sem custo.' },
+        { no: 'III', title: 'PIX com desconto', body: '5% off à vista no PIX ou até 6x sem juros no cartão.' },
+        { no: 'IV', title: 'Troca sem dor', body: 'Sete dias para trocar numeração, presencialmente ou pelos Correios.' }
+      ],
+
+      gallery: [
+        { slot: 'produto · frente · 900×1200' },
+        { slot: 'produto · costas · 900×1200' },
+        { slot: 'detalhe do tecido · 900×1200' },
+        { slot: 'look completo · 900×1200' }
+      ],
+      chosenColor: st.color,
+      colorOpts, sizeOpts,
+      sizeNote: stock[st.size]
+        ? 'Em estoque · envio no mesmo dia'
+        : 'Esgotado no estoque — fazemos sob encomenda em até 10 dias úteis',
+      accordion: [
+        { title: 'Descrição', sign: '−', body: 'Vestido midi em linho misto com decote quadrado, mangas curtas e fenda discreta na barra. Caimento fluido, forro na saia. Modelo veste M e tem 1,70m.' },
+        { title: 'Medidas e numeração', sign: '+', body: 'P (36/38) · M (40/42) · G (44/46) · GG (48/50). Comprimento 118cm no tamanho M. Na dúvida entre dois números, escolha o maior.' },
+        { title: 'Sob encomenda', sign: '+', body: 'Numeração ou cor esgotada? Costuramos e entregamos em até 10 dias úteis, com uma prova de ajuste combinada para quem retira aqui na cidade.' },
+        { title: 'Envio e retirada', sign: '+', body: 'Retirada grátis combinada no Centro de Várzea Alegre em até 2 horas. Motoboy local no mesmo dia. Correios para todo o Brasil, grátis acima de R$ 249.' }
+      ],
+
+      query: st.query,
+      setQuery: e => this.setState({ query: e.target.value }),
+      resultCount: '18 peças',
+      suggestions: ['vestido de linho', 'conjunto alfaiataria', 'blusa cropped', 'saia midi', 'sandália', 'moda praia'].map(term => ({ term })),
+      searchResults: grid.slice(0, 6),
+
+      cart,
+      subtotal: BRL(sub),
+      shipLabel: ship.label,
+      shipValue,
+      pixDiscount: BRL(pixDisc),
+      pixTotal: BRL(sub + ship.v - pixDisc),
+      cardTotal: BRL(sub + ship.v),
+      shipOpts: Object.keys(ships).map(k => {
+        const s = ships[k], sel = st.ship === k;
+        return {
+          name: s.name, eta: s.eta, price: s.v === 0 ? 'Grátis' : BRL(s.v),
+          bg: sel ? '#E9E3D9' : 'transparent', border: sel ? '#232320' : '#DFD8CB',
+          pick: e => { e.preventDefault(); this.setState({ ship: k }); }
+        };
+      }),
+
+      steps: [
+        { no: '1', label: 'Sacola', color: '#8A8375' },
+        { no: '2', label: 'Entrega e pagamento', color: '#232320' },
+        { no: '3', label: 'Confirmação', color: '#8A8375' }
+      ],
+      fields: [
+        { label: 'Nome completo', value: 'Maria Eduarda Alves', span: '2' },
+        { label: 'CPF', value: '000.000.000-00', span: '1' },
+        { label: 'Celular / WhatsApp', value: '(88) 99999-0000', span: '1' },
+        { label: 'CEP', value: '63540-000', span: '1' },
+        { label: 'Endereço', value: 'Rua das Acácias, 120', span: '2' },
+        { label: 'Bairro', value: 'Centro', span: '1' },
+        { label: 'Cidade', value: 'Várzea Alegre', span: '1' },
+        { label: 'Estado', value: 'CE', span: '1' }
+      ],
+      payOpts: Object.keys(pays).map(k => {
+        const o = pays[k], sel = st.pay === k;
+        return {
+          name: o.name, note: o.note, detail: o.detail,
+          bg: sel ? '#FAF7F2' : 'transparent', border: sel ? '#232320' : '#DFD8CB',
+          pick: e => { e.preventDefault(); this.setState({ pay: k }); }
+        };
+      }),
+      payDiscountLabel: st.pay === 'pix' ? 'Desconto PIX (5%)' : 'Desconto',
+
+      clubPerks: [
+        { no: 'I', body: 'Acesso antecipado às novidades, sempre na quinta antes de abrir para todos.' },
+        { no: 'II', body: 'Aviso no WhatsApp quando sua numeração favorita volta ao estoque.' },
+        { no: 'III', body: 'Cupom de aniversário de 15% para usar em qualquer compra no site.' }
+      ],
+      accountNav: [
+        { label: 'Meus pedidos', color: '#232320' },
+        { label: 'Meus dados', color: '#6B665C' },
+        { label: 'Endereços', color: '#6B665C' },
+        { label: 'Favoritos', color: '#6B665C' },
+        { label: 'Trocas e devoluções', color: '#6B665C' },
+        { label: 'Sair', color: '#6B665C' }
+      ],
+      orders: [
+        { id: '#OZ-2841', date: '24 ago 2026', status: 'Em separação', statusColor: '#8A6A4F', items: 'Vestido Serrote · Blusa Cordel', delivery: 'Retirada no Centro · pronto hoje até 16h', total: BRL(419.8), action: 'Ver pedido', thumbs: [1, 2] },
+        { id: '#OZ-2790', date: '11 ago 2026', status: 'Entregue', statusColor: '#5C574D', items: 'Conjunto Lavras', delivery: 'Correios · entregue em 14 ago', total: BRL(349.9), action: 'Comprar de novo', thumbs: [1] },
+        { id: '#OZ-2733', date: '02 ago 2026', status: 'Sob encomenda', statusColor: '#8A6A4F', items: 'Vestido Serena · GG', delivery: 'Previsão de entrega em 10 dias úteis', total: BRL(339.9), action: 'Acompanhar', thumbs: [1] }
+      ],
+
+      aboutBlocks: [
+        { title: 'Curadoria de araras', body: 'Cada peça passa pela prova antes de entrar no site. Se o caimento não convence a gente, não vai para a vitrine.' },
+        { title: 'Feito para o calor', body: 'Linho, viscose e algodão em primeiro lugar. Tecidos que respiram e sobrevivem a 38 graus no Cariri.' },
+        { title: 'Encomenda com nome', body: 'Numeração esgotada não é fim de conversa: costuramos sob medida em até 10 dias úteis.' }
+      ],
+      footerCols: [
+        { title: 'Comprar', links: [{ label: 'Novidades' }, { label: 'Vestidos' }, { label: 'Conjuntos' }, { label: 'Acessórios' }, { label: 'Sob encomenda' }] },
+        { title: 'Ajuda', links: [{ label: 'Trocas e devoluções' }, { label: 'Prazos de entrega' }, { label: 'Tabela de medidas' }, { label: 'Formas de pagamento' }] },
+        { title: 'Ozzi', links: [{ label: 'Sobre nós' }, { label: 'Clube Ozzi' }, { label: 'Trabalhe com a gente' }, { label: 'Instagram' }] }
+      ]
+    };
+  }
+}
+
+</script>
+</body>
+</html>
