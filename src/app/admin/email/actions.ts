@@ -93,15 +93,12 @@ export async function alternarAutomacao(id: string, ativo: boolean): Promise<Est
  * ------------------------------------------------------------------ */
 
 const EsquemaCampanha = z.object({
-  id: z.string().regex(UUID).or(z.literal('')),
-  acao: z.enum(['agendar', 'rascunho']),
   assunto: z
     .string()
     .trim()
     .min(3, 'O e-mail precisa de um assunto — é a única coisa que a cliente lê antes de abrir.')
     .max(120, 'O assunto passa de 120 caracteres e vai ser cortado na caixa de entrada.'),
   preHeader: z.string().trim().max(160, 'O pré-cabeçalho passa de 160 caracteres.'),
-  lista: z.string().regex(UUID).or(z.literal('')),
   data: z
     .string()
     .trim()
@@ -124,19 +121,25 @@ function rotuloEnvio(data: string, hora: string): string {
  * o que fica salvo é o cabeçalho do envio.
  */
 export async function salvarCampanha(_estado: EstadoAcao, formData: FormData): Promise<EstadoAcao> {
+  // Identificadores e o botão clicado não têm texto de erro para a cliente:
+  // se vierem errados, o problema é a tela, não o que ela escreveu.
+  const id = texto(formData.get('id'))
+  const acao = texto(formData.get('acao'))
+  const lista = texto(formData.get('lista'))
+  if (id && !UUID.test(id)) return { erro: ERRO_ENTRADA }
+  if (lista && !UUID.test(lista)) return { erro: ERRO_ENTRADA }
+  if (acao !== 'agendar' && acao !== 'rascunho') return { erro: ERRO_ENTRADA }
+
   const entrada = EsquemaCampanha.safeParse({
-    id: texto(formData.get('id')),
-    acao: texto(formData.get('acao')),
     assunto: texto(formData.get('assunto')),
     preHeader: texto(formData.get('pre_header')),
-    lista: texto(formData.get('lista')),
     data: texto(formData.get('data')),
     hora: texto(formData.get('hora')),
   })
   if (!entrada.success) return { erro: entrada.error.issues[0]?.message ?? ERRO_ENTRADA }
 
-  const d = entrada.data
-  const agendar = d.acao === 'agendar'
+  const d = { ...entrada.data, id, lista }
+  const agendar = acao === 'agendar'
 
   if (agendar && !d.lista) return { erro: 'Escolha a lista que vai receber o e-mail antes de agendar.' }
   if (agendar && (!d.data || !d.hora))

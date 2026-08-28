@@ -113,8 +113,9 @@ export function FormEndereco({ podeSalvar }: { podeSalvar: boolean }) {
           autoComplete="postal-code"
           maxLength={9}
           placeholder="63540-000"
-          dica={erroCep || avisoCep || undefined}
-          invalido={invalido('cep') || Boolean(erroCep)}
+          dica={avisoCep || undefined}
+          erro={erroCep || undefined}
+          invalido={invalido('cep')}
           className="sm:col-span-2"
         />
 

@@ -324,13 +324,13 @@ export function ModeloEmail({
 
           <div className="flex flex-col gap-[10px]" style={{ gridColumn: 'span 2' }}>
             <Recado estado={estado} />
-            <span id={avisoId}>
+            <div id={avisoId}>
               <AvisoProvedor>
                 O painel guarda o cabeçalho do envio — assunto, pré-cabeçalho, lista e agendamento. O
                 título, o texto e o botão ficam neste modelo até um provedor de e-mail ser conectado:
                 nenhum e-mail sai daqui.
               </AvisoProvedor>
-            </span>
+            </div>
           </div>
         </div>
       </form>

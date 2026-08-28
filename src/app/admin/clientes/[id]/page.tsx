@@ -10,6 +10,7 @@ import {
   buscarCliente,
   cidadeUf,
   linhasDeEndereco,
+  nomeDoCliente,
   resumoDoCliente,
 } from '@/components/admin/clientes/dados'
 import { ehDoCariri } from '@/lib/admin-queries'
@@ -19,8 +20,7 @@ type Params = Promise<{ id: string }>
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { id } = await params
-  const detalhe = await buscarCliente(id)
-  return { title: detalhe ? detalhe.cliente.nome : 'Cliente' }
+  return { title: (await nomeDoCliente(id)) ?? 'Cliente' }
 }
 
 export default async function ClientePage({ params }: { params: Params }) {

@@ -12,6 +12,8 @@ export interface CampoContaProps {
   maxLength?: number
   placeholder?: string
   dica?: string
+  /** Mensagem de erro do próprio campo, em #A0533F logo abaixo do input. */
+  erro?: string
   invalido?: boolean
   somenteLeitura?: boolean
   aoSair?: () => void
@@ -35,6 +37,7 @@ export function CampoConta({
   maxLength,
   placeholder,
   dica,
+  erro,
   invalido = false,
   somenteLeitura = false,
   aoSair,
@@ -42,6 +45,8 @@ export function CampoConta({
   estiloInput,
 }: CampoContaProps) {
   const idDica = `${id}-dica`
+  const idErro = `${id}-erro`
+  const marcado = invalido || Boolean(erro)
 
   return (
     <div className={`min-w-0 ${className}`}>
@@ -60,16 +65,20 @@ export function CampoConta({
         autoComplete={autoComplete}
         maxLength={maxLength}
         placeholder={placeholder}
-        aria-invalid={invalido || undefined}
-        aria-describedby={dica ? idDica : undefined}
+        aria-invalid={marcado || undefined}
+        aria-describedby={erro ? idErro : dica ? idDica : undefined}
         className="oz-input"
         style={{
-          borderColor: invalido ? '#A0533F' : undefined,
+          borderColor: marcado ? '#A0533F' : undefined,
           color: somenteLeitura ? '#8A8375' : undefined,
           ...estiloInput,
         }}
       />
-      {dica ? (
+      {erro ? (
+        <p id={idErro} style={{ marginTop: 6, fontSize: 11.5, lineHeight: 1.5, color: '#A0533F' }}>
+          {erro}
+        </p>
+      ) : dica ? (
         <p id={idDica} style={{ marginTop: 6, fontSize: 11.5, lineHeight: 1.5, color: '#8A8375' }}>
           {dica}
         </p>

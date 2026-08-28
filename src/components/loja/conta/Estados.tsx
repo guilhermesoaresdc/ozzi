@@ -171,3 +171,38 @@ export function EsqueletoBloco({ altura = 320 }: { altura?: number }) {
     </div>
   )
 }
+
+const NUMERAIS = ['I', 'II', 'III', 'IV']
+
+/** O que ainda vai chegar numa tela em construção. Nada de dado inventado. */
+export function ProximosPassos({ titulo, itens }: { titulo: string; itens: string[] }) {
+  return (
+    <section style={{ marginTop: 22 }}>
+      <h3 className="oz-label" style={{ marginBottom: 12 }}>
+        {titulo}
+      </h3>
+      <ol style={{ borderTop: '1px solid #E4DDD1' }}>
+        {itens.map((item, i) => (
+          <li
+            key={item}
+            className="flex"
+            style={{ gap: 14, padding: '12px 0', borderBottom: '1px solid #E4DDD1' }}
+          >
+            <span
+              className="shrink-0 uppercase"
+              style={{ width: 22, fontSize: 11, letterSpacing: '.14em', color: '#8A6A4F', lineHeight: 1.8 }}
+            >
+              {NUMERAIS[i] ?? '·'}
+            </span>
+            <span
+              className="text-body"
+              style={{ fontSize: 13.5, lineHeight: 1.7, textWrap: 'pretty' }}
+            >
+              {item}
+            </span>
+          </li>
+        ))}
+      </ol>
+    </section>
+  )
+}

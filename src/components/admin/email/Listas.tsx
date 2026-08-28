@@ -40,7 +40,7 @@ export function Listas({
   return (
     <Card
       titulo={
-        <div className="flex flex-col gap-[10px]">
+        <div className="flex min-w-0 flex-1 flex-col gap-[10px]">
           <TituloCartao titulo="Listas" apoio="Segmentos atualizados automaticamente" />
           <p style={AJUDA}>
             A contagem é feita agora, sobre os cadastros com opt-in de e-mail — não é um número guardado.

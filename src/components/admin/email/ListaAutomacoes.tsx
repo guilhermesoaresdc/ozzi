@@ -45,7 +45,7 @@ export function ListaAutomacoes({ automacoes }: { automacoes: EmailAutomationRow
   return (
     <Card
       titulo={
-        <div className="flex flex-col gap-[10px]">
+        <div className="flex min-w-0 flex-1 flex-col gap-[10px]">
           <TituloCartao titulo="Automações" apoio="Disparam sozinhas quando a cliente faz algo" />
           <AvisoProvedor>
             O disparo depende de um provedor de e-mail, que ainda não está conectado. O painel guarda a

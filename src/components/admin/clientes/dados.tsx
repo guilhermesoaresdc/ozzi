@@ -129,3 +129,10 @@ export function linhasDeEndereco(
 
   return []
 }
+
+/** Só o nome, para o `generateMetadata` não repetir a consulta inteira. */
+export async function nomeDoCliente(id: string): Promise<string | null> {
+  const supabase = await createClient()
+  const { data } = await supabase.from('customers').select('nome').eq('id', id).maybeSingle()
+  return data?.nome ?? null
+}

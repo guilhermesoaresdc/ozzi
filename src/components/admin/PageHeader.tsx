@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Suspense } from 'react'
 import { BuscaPainel } from '@/components/admin/BuscaPainel'
 
 export function PageHeader({
@@ -27,7 +28,10 @@ export function PageHeader({
           )}
         </div>
         <div className="flex flex-wrap items-center gap-[10px]">
-          <BuscaPainel />
+          {/* useSearchParams precisa de fronteira de Suspense se a página virar estática */}
+          <Suspense fallback={<div style={{ width: 270, height: 41 }} />}>
+            <BuscaPainel />
+          </Suspense>
           {acao ?? (
             <Link href="/admin/produtos/novo" className="oz-btn oz-btn-primary" style={{ padding: '13px 22px' }}>
               + Novo produto
