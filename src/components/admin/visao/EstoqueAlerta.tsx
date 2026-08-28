@@ -30,7 +30,7 @@ export function EstoqueAlerta({ itens }: { itens: VisaoGeral['alertaEstoque'] })
           {itens.map(({ produto, resumo }, i) => (
             <LinhaLink
               key={produto.id}
-              href={`/admin/produtos/${produto.id}`}
+              href={`/admin/produtos/${produto.id}/editar`}
               py={12}
               ultima={i === itens.length - 1}
             >

@@ -291,9 +291,9 @@ const ERRO_CODIGO =
 
 const EsquemaCupom = z.object({
   codigo: z.string().regex(CODIGO, ERRO_CODIGO),
-  tipo: z.enum(['percentual', 'valor'], { message: 'Escolha se o desconto é em % ou em reais.' }),
+  tipo: z.enum(['percentual', 'valor'], 'Escolha se o desconto é em % ou em reais.'),
   valor: z.string(),
-  regra: z.enum(CHAVES_REGRA, { message: 'Escolha quando o cupom vale.' }),
+  regra: z.enum(CHAVES_REGRA, 'Escolha quando o cupom vale.'),
   validade: z
     .string()
     .trim()
@@ -311,13 +311,13 @@ export async function criarCupom(_estado: EstadoAcao, formData: FormData): Promi
   if (!entrada.success) return { erro: entrada.error.issues[0]?.message ?? ERRO_ENTRADA }
 
   const d = entrada.data
+  const ERRO_PORCENTO = 'O desconto em porcentagem precisa estar entre 1 e 90, como 10 ou 12,5.'
+  const ERRO_REAIS = 'O desconto em reais precisa estar entre R$ 0,01 e R$ 9.999,00.'
+
   const valor = paraNumero(d.valor)
-  if (d.tipo === 'percentual') {
-    if (valor === null || valor < 1 || valor > 90)
-      return { erro: 'O desconto em porcentagem precisa estar entre 1 e 90, como 10 ou 12,5.' }
-  } else if (valor === null || valor < 0.01 || valor > 9_999) {
-    return { erro: 'O desconto em reais precisa estar entre R$ 0,01 e R$ 9.999,00.' }
-  }
+  if (valor === null) return { erro: d.tipo === 'percentual' ? ERRO_PORCENTO : ERRO_REAIS }
+  if (d.tipo === 'percentual' && (valor < 1 || valor > 90)) return { erro: ERRO_PORCENTO }
+  if (d.tipo === 'valor' && (valor < 0.01 || valor > 9_999)) return { erro: ERRO_REAIS }
 
   const supabase = await admin()
   if (!supabase) return { erro: ERRO_SESSAO }
