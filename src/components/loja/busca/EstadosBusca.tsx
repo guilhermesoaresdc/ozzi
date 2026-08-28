@@ -55,7 +55,7 @@ export function SemResultado({ termo }: { termo: string }) {
       className="oz-card flex flex-col items-center text-center"
       style={{ padding: '56px 28px', gap: 12 }}
     >
-      <span className="oz-label">Nenhuma peça</span>
+      <span className="oz-label">Sem resultado</span>
       <h2
         className="font-display"
         style={{ fontSize: 26, fontWeight: 300, lineHeight: 1.15, textWrap: 'balance' }}
@@ -66,8 +66,8 @@ export function SemResultado({ termo }: { termo: string }) {
         className="text-body"
         style={{ fontSize: 13.5, lineHeight: 1.7, maxWidth: 430, textWrap: 'pretty' }}
       >
-        Tente o nome da peça, uma cor ou a referência (por exemplo, OZ-1042). Se você viu no
-        Instagram e não achou aqui, a gente procura no estoque para você.
+        Tente o nome da peça, uma cor ou o código da referência. Se você viu no Instagram e não
+        achou aqui, a gente procura no estoque para você.
       </p>
       <div className="flex flex-wrap justify-center gap-3 pt-2">
         <Link href="/novidades" className="oz-btn oz-btn-outline">

@@ -103,7 +103,10 @@ export function PainelBusca({
   }, [alvo, buscar])
 
   // Aborta o que estiver em voo ao sair da tela.
-  useEffect(() => () => requisicao.current?.abort(), [])
+  useEffect(() => {
+    const pendente = requisicao
+    return () => pendente.current?.abort()
+  }, [])
 
   function enviar() {
     if (!alvo || alvo === exibido.current || alvo === emVoo.current) return

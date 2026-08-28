@@ -16,12 +16,12 @@ type Params = Promise<{ codigo: string }>
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { codigo } = await params
-  return { title: `Pedido #${decodeURIComponent(codigo).toUpperCase()}` }
+  return { title: `Pedido #${codigo.toUpperCase()}` }
 }
 
 export default async function PedidoPage({ params }: { params: Params }) {
   const { codigo } = await params
-  const pedido = await buscarPedido(decodeURIComponent(codigo))
+  const pedido = await buscarPedido(codigo)
   if (!pedido) notFound()
 
   const [historico, settings] = await Promise.all([
