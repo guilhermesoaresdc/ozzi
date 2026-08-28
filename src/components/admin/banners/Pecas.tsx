@@ -54,11 +54,14 @@ export function Recado({ estado }: { estado: EstadoAcao }) {
 export function BotaoTracejado({
   children,
   onClick,
+  aberto,
   className = '',
   style,
 }: {
   children: ReactNode
   onClick: () => void
+  /** Quando o botão abre um formulário logo abaixo. */
+  aberto?: boolean
   className?: string
   style?: React.CSSProperties
 }) {
@@ -66,6 +69,7 @@ export function BotaoTracejado({
     <button
       type="button"
       onClick={onClick}
+      aria-expanded={aberto}
       className={`oz-btn border border-dashed border-line-dashed text-muted transition-colors hover:border-ink hover:text-ink ${className}`}
       style={{ ...BOTAO, ...style }}
     >

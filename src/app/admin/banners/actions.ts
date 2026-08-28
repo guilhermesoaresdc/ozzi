@@ -318,13 +318,33 @@ const EsquemaCategoria = z.object({
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Use só letras minúsculas, números e hífen no endereço.'),
 })
 
+/** Normaliza o endereço antes de validar: hífen sobrando não é erro de quem digitou. */
+function limparSlug(valor: string): string {
+  return valor
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9-]+/g, '-')
+    .replace(/-{2,}/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+/** Endereços que já são rota da loja: /[categoria] nunca chegaria a atender. */
+const RESERVADOS = [
+  'admin', 'busca', 'checkout', 'conta', 'entrar', 'novidades', 'produto', 'sacola', 'sobre',
+]
+
 /** Cria a categoria já ativa; a foto do banner entra depois, em "Trocar imagem". */
 export async function criarCategoria(_estado: EstadoAcao, formData: FormData): Promise<EstadoAcao> {
+  const nomeBruto = texto(formData.get('nome'))
   const entrada = EsquemaCategoria.safeParse({
-    nome: texto(formData.get('nome')),
-    slug: texto(formData.get('slug')),
+    nome: nomeBruto,
+    slug: limparSlug(texto(formData.get('slug'))) || limparSlug(nomeBruto),
   })
   if (!entrada.success) return { erro: entrada.error.issues[0]?.message ?? ERRO_ENTRADA }
+
+  if (RESERVADOS.includes(entrada.data.slug))
+    return { erro: `“${entrada.data.slug}” já é uma página da loja. Escolha outro endereço.` }
 
   const noMenu = texto(formData.get('no_menu')) === 'on'
   const supabase = await admin()

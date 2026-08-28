@@ -3,7 +3,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Campo } from '@/components/loja/checkout/Campo'
-import { AvisoErro, EsqueletoCheckout, SacolaVazia } from '@/components/loja/checkout/EstadosCheckout'
+import {
+  AvisoErro,
+  ConfirmandoPedido,
+  EsqueletoCheckout,
+  SacolaVazia,
+} from '@/components/loja/checkout/EstadosCheckout'
 import { OpcoesEntrega } from '@/components/loja/checkout/OpcoesEntrega'
 import { OpcoesPagamento } from '@/components/loja/checkout/OpcoesPagamento'
 import { ResumoPedido } from '@/components/loja/checkout/ResumoPedido'
@@ -13,6 +18,7 @@ import {
   precisaEndereco,
   separarLogradouro,
   validarEntrega,
+  type CampoEntrega,
   type DadosEntrega,
   type ErrosEntrega,
 } from '@/components/loja/checkout/validacao'
@@ -81,6 +87,7 @@ export function PainelCheckout({
   const [avisoCep, setAvisoCep] = useState('')
   const [erroGeral, setErroGeral] = useState('')
   const [enviando, setEnviando] = useState(false)
+  const [concluindo, setConcluindo] = useState(false)
 
   const finalizado = useRef(false)
   const ultimoCep = useRef('')
@@ -128,9 +135,18 @@ export function PainelCheckout({
     return `https://wa.me/${whatsapp}?text=${encodeURIComponent(texto)}`
   }, [itens, rotuloEntrega, totais.total, whatsapp])
 
-  const alterar = useCallback((campo: keyof DadosEntrega, valor: string) => {
-    setDados((atual) => ({ ...atual, [campo]: valor }))
-    setErros((atual) => (atual[campo] ? { ...atual, [campo]: undefined } : atual))
+  const alterar = useCallback((campo: CampoEntrega, valor: string) => {
+    setDados((atual) => {
+      const proximo: DadosEntrega = { ...atual }
+      proximo[campo] = valor
+      return proximo
+    })
+    setErros((atual) => {
+      if (!atual[campo]) return atual
+      const proximo: ErrosEntrega = { ...atual }
+      delete proximo[campo]
+      return proximo
+    })
   }, [])
 
   const buscarCep = useCallback(async (bruto: string) => {
@@ -252,6 +268,7 @@ export function PainelCheckout({
       }
 
       finalizado.current = true
+      setConcluindo(true)
       limpar()
       const busca = new URLSearchParams({ codigo, email: dados.email.trim() })
       router.push(`/checkout/confirmacao?${busca.toString()}`)
@@ -266,6 +283,7 @@ export function PainelCheckout({
   }, [erroGeral])
 
   if (!carregado) return <EsqueletoCheckout />
+  if (concluindo) return <ConfirmandoPedido />
   if (itens.length === 0) return <SacolaVazia />
 
   return (
@@ -276,9 +294,17 @@ export function PainelCheckout({
             <AvisoErro mensagem={erroGeral} mostrarAjusteDaSacola={PADRAO_ESTOQUE.test(erroGeral)} />
           )}
 
-          <h2 className="font-display" style={{ fontSize: 28, fontWeight: 300, marginBottom: 20 }}>
+          <h2 className="font-display" style={{ fontSize: 28, fontWeight: 300 }}>
             Entrega
           </h2>
+          <p
+            className="text-body"
+            style={{ fontSize: 13.5, lineHeight: 1.7, margin: '8px 0 20px', maxWidth: 520, textWrap: 'pretty' }}
+          >
+            {comEndereco
+              ? 'Preencha o CEP que a gente completa o endereço para você.'
+              : 'Na retirada o endereço é opcional — combinamos o ponto no Centro pelo WhatsApp.'}
+          </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4" style={{ gap: 14 }}>
             <Campo

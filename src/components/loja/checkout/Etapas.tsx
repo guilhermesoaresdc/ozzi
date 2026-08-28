@@ -36,13 +36,15 @@ export function Etapas({ atual, linkarAnteriores = false }: { atual: 2 | 3; link
             </>
           )
 
-          const voltar = linkarAnteriores && etapa.href && etapa.numero < atual
+          // Só a etapa já cumprida volta a ser clicável
+          const voltar: string | null =
+            linkarAnteriores && etapa.numero < atual ? etapa.href : null
 
           return (
             <li key={etapa.numero} style={{ color: cor }}>
-              {voltar && etapa.href ? (
+              {voltar ? (
                 <Link
-                  href={etapa.href}
+                  href={voltar}
                   className="flex items-center"
                   style={{ gap: 10, color: cor }}
                   aria-label={`Voltar para a etapa ${etapa.numero}, ${etapa.rotulo}`}

@@ -56,6 +56,26 @@ export function EsqueletoCheckout() {
   )
 }
 
+/** Entre a resposta da RPC e a tela de confirmação — a sacola já foi limpa. */
+export function ConfirmandoPedido() {
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      className="oz-card flex flex-col items-center text-center"
+      style={{ padding: '56px 28px', gap: 12 }}
+    >
+      <span className="oz-label">Um instante</span>
+      <h2 className="font-display" style={{ fontSize: 26, fontWeight: 300, lineHeight: 1.15 }}>
+        Confirmando seu pedido
+      </h2>
+      <p className="text-body" style={{ fontSize: 13.5, lineHeight: 1.7, maxWidth: 430, textWrap: 'pretty' }}>
+        Registramos as peças no estoque e já levamos você para a confirmação.
+      </p>
+    </div>
+  )
+}
+
 export function SacolaVazia() {
   return (
     <div className="oz-card flex flex-col items-center text-center" style={{ padding: '56px 28px', gap: 12 }}>
