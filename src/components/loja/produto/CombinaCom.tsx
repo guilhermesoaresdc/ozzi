@@ -9,6 +9,9 @@ const GRADE = {
 
 const SIZES = '(max-width: 640px) 100vw, (max-width: 1100px) 33vw, 25vw'
 
+/** Mesma caixa vazia dos outros carregamentos da loja: fundo #FAF7F2 e fio de 1px. */
+const BLOCO = { background: '#FAF7F2', boxShadow: '0 0 0 1px #DFD8CB' } as const
+
 /** Vitrine cruzada: peças de outras categorias, em cartão reduzido. */
 export async function CombinaCom({
   categoriaId,
@@ -42,17 +45,14 @@ export function CombinaComSkeleton({ quantidade = 4 }: { quantidade?: number }) 
     <section style={{ paddingTop: 76 }} role="status" aria-live="polite">
       <span className="sr-only">Carregando peças que combinam</span>
       <div className="animate-pulse" aria-hidden="true">
-        <div
-          className="bg-surface-sunken"
-          style={{ width: 210, height: 30, maxWidth: '100%', marginBottom: 24 }}
-        />
+        <div style={{ ...BLOCO, width: 210, height: 30, maxWidth: '100%', marginBottom: 24 }} />
         <div className="grid" style={GRADE}>
           {Array.from({ length: quantidade }, (_, i) => (
             <div key={i} className="flex flex-col">
-              <div style={{ aspectRatio: '3/4', background: '#FAF7F2', boxShadow: '0 0 0 1px #DFD8CB' }} />
+              <div style={{ ...BLOCO, aspectRatio: '3/4' }} />
               <div className="flex flex-col gap-[9px]" style={{ padding: '13px 2px 0' }}>
-                <div className="bg-surface-sunken" style={{ height: 11, width: '62%' }} />
-                <div className="bg-surface-sunken" style={{ height: 14, width: '34%' }} />
+                <div style={{ ...BLOCO, height: 11, width: '62%' }} />
+                <div style={{ ...BLOCO, height: 14, width: '34%' }} />
               </div>
             </div>
           ))}

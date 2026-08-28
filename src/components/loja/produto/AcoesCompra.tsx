@@ -51,7 +51,7 @@ export function AcoesCompra({
   }
 
   return (
-    <div style={{ marginBottom: 14 }}>
+    <div>
       <div className="flex flex-wrap" style={{ gap: 10, marginBottom: 14 }}>
         <button
           type="button"
