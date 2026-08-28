@@ -1,0 +1,279 @@
+@import "tailwindcss";
+
+@theme {
+  /* ---- Cores (handoff §8) ---- */
+  --color-bg: #F2EEE7;
+  --color-surface: #FAF7F2;
+  --color-surface-hover: #EFE9DF;
+  --color-surface-sunken: #E9E3D9;
+  --color-ink: #232320;
+  --color-ink-2: #312E28;
+  --color-body: #5C574D;
+  --color-body-2: #3E3B34;
+  --color-muted: #8A8375;
+  --color-muted-2: #6B665C;
+  --color-faint: #9A9385;
+  --color-line: #DFD8CB;
+  --color-line-2: #E4DDD1;
+  --color-line-input: #C9C0B1;
+  --color-line-dashed: #B8AE9C;
+  --color-line-check: #A79C89;
+  --color-accent: #8A6A4F;
+  --color-accent-light: #C4A88B;
+  --color-on-dark: #F2EEE7;
+  --color-on-dark-muted: #B3ADA0;
+  --color-on-dark-faint: #8F8A7E;
+  --color-dark-line: #3A3730;
+  --color-dark-line-2: #4A463D;
+  --color-chart-bar: #C9BFAD;
+  --color-success: #5C7A5E;
+  --color-warning: #8A6A4F;
+  --color-danger: #A0533F;
+
+  /* ---- Tipografia ---- */
+  --font-sans: var(--font-jost), "Jost", Helvetica, Arial, sans-serif;
+  --font-display: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", monospace;
+
+  /* ---- Raio: zero em todo o produto (handoff §8) ---- */
+  --radius-xs: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-4xl: 0px;
+
+  /* ---- Larguras máximas ---- */
+  --container-shell: 1340px;
+  --container-narrow: 1180px;
+  --container-search: 1000px;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  a {
+    color: var(--color-ink);
+    text-decoration: none;
+    transition: color 150ms ease, border-color 150ms ease, background-color 150ms ease;
+  }
+
+  a:hover {
+    color: var(--color-accent);
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font-family: inherit;
+    color: inherit;
+  }
+
+  button {
+    transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: 1px solid var(--color-ink);
+    outline-offset: -1px;
+  }
+
+  /* O handoff §7 pede foco visível também em links e botões — ausente nos protótipos. */
+  a:focus-visible,
+  button:focus-visible,
+  [role="button"]:focus-visible,
+  summary:focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: #E0D2C0;
+  }
+
+  h1, h2, h3, h4, h5, h6, p, figure {
+    margin: 0;
+  }
+
+  ul, ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  select {
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, #232320 50%),
+      linear-gradient(135deg, #232320 50%, transparent 50%);
+    background-position: calc(100% - 15px) calc(50% + 1px), calc(100% - 10px) calc(50% + 1px);
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 32px;
+  }
+}
+
+@utility shell {
+  max-width: var(--container-shell);
+  margin-inline: auto;
+  padding-inline: 28px;
+  width: 100%;
+}
+
+@utility shell-narrow {
+  max-width: var(--container-narrow);
+  margin-inline: auto;
+  padding-inline: 28px;
+  width: 100%;
+}
+
+@layer components {
+  /* Padrão recorrente de label (handoff §4) */
+  .oz-label {
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    line-height: 1.4;
+  }
+
+  .oz-eyebrow {
+    font-size: 10.5px;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    line-height: 1.4;
+  }
+
+  .oz-nav-link {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding-bottom: 3px;
+    border-bottom: 1px solid transparent;
+  }
+
+  .oz-nav-link:hover {
+    border-bottom-color: var(--color-ink);
+    color: var(--color-ink);
+  }
+
+  .oz-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 11.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 1px solid transparent;
+    line-height: 1;
+    text-align: center;
+  }
+
+  .oz-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+
+  .oz-btn-primary {
+    background: var(--color-ink);
+    color: var(--color-on-dark);
+    padding: 16px 32px;
+  }
+
+  .oz-btn-primary:hover:not(:disabled) {
+    background: var(--color-accent);
+    color: var(--color-on-dark);
+  }
+
+  .oz-btn-outline {
+    background: transparent;
+    color: var(--color-ink);
+    border-color: var(--color-ink);
+    padding: 16px 32px;
+  }
+
+  .oz-btn-outline:hover:not(:disabled) {
+    background: var(--color-ink);
+    color: var(--color-on-dark);
+  }
+
+  /* Contorno claro, para uso sobre fundo escuro */
+  .oz-btn-outline-light {
+    background: transparent;
+    color: var(--color-on-dark);
+    border-color: var(--color-on-dark);
+    padding: 16px 32px;
+  }
+
+  .oz-btn-outline-light:hover:not(:disabled) {
+    background: var(--color-on-dark);
+    color: var(--color-ink);
+  }
+
+  .oz-btn-tertiary {
+    background: transparent;
+    color: var(--color-body);
+    border-color: var(--color-line-input);
+    padding: 14px 22px;
+  }
+
+  .oz-btn-tertiary:hover:not(:disabled) {
+    border-color: var(--color-ink);
+    color: var(--color-ink);
+  }
+
+  .oz-input {
+    width: 100%;
+    border: 1px solid var(--color-line-input);
+    background: var(--color-surface);
+    padding: 13px 14px;
+    font-size: 14px;
+    color: var(--color-ink);
+  }
+
+  .oz-input::placeholder {
+    color: var(--color-faint);
+  }
+
+  .oz-card {
+    border: 1px solid var(--color-line);
+    background: var(--color-surface);
+  }
+
+  /* Fio de 1px por célula — nunca fundo no container (handoff §5.1) */
+  .oz-hairline-cell {
+    background: var(--color-bg);
+    box-shadow: 0 0 0 1px var(--color-line);
+  }
+
+  .oz-pill {
+    border-radius: 99px;
+  }
+
+  .oz-table-row:hover {
+    background: var(--color-surface-hover);
+  }
+}
