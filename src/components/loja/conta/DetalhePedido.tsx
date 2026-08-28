@@ -193,7 +193,7 @@ export function DetalhePedido({ pedido, taxaPix }: { pedido: PedidoDaConta; taxa
                 Sob encomenda ·{' '}
               </span>
               A numeração saiu do estoque, então a peça está sendo costurada sob medida.{' '}
-              {PRAZO_ENCOMENDA}, e a gente avisa você a cada etapa.
+              {PRAZO_ENCOMENDA} — a gente avisa você a cada etapa.
             </p>
           )}
 

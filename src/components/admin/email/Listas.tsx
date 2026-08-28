@@ -4,8 +4,13 @@ import type { EmailListRow } from '@/lib/database.types'
 import { num } from '@/lib/format'
 import { AJUDA, TituloCartao } from './Pecas'
 
+interface Regra {
+  texto: string
+  conta: (clientes: ClienteComResumo[], alertas: number) => number
+}
+
 /** A regra guardada no banco é um código; aqui ela vira frase e vira contagem. */
-const REGRAS: Record<string, { texto: string; conta: (c: ClienteComResumo[], alertas: number) => number }> = {
+const REGRAS: Partial<Record<string, Regra>> = {
   todos: {
     texto: 'Todo cadastro com opt-in de e-mail',
     conta: (clientes) => clientes.filter((c) => c.opt_in_email).length,

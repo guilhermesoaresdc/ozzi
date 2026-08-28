@@ -94,7 +94,7 @@ export function ModeloEmail({
         <input type="hidden" name="id" value={campanha?.id ?? ''} />
 
         {/* Prévia: o e-mail como a cliente vê, refletindo o que está sendo digitado. */}
-        <div className="flex min-w-0 flex-col gap-3" style={{ maxWidth: 600 }}>
+        <div className="mx-auto flex w-full min-w-0 flex-col gap-3" style={{ maxWidth: 600 }}>
           <div className="flex flex-col gap-[3px]">
             <span className="oz-label">Na caixa de entrada</span>
             <span
@@ -328,7 +328,7 @@ export function ModeloEmail({
               <AvisoProvedor>
                 O painel guarda o cabeçalho do envio — assunto, pré-cabeçalho, lista e agendamento. O
                 título, o texto e o botão ficam neste modelo até um provedor de e-mail ser conectado:
-                nenhum e-mail sai daqui.
+                nenhum e-mail sai daqui, nem o teste.
               </AvisoProvedor>
             </div>
           </div>
