@@ -34,18 +34,23 @@ export function PainelBusca({
   resultadosIniciais,
 }: {
   termoInicial: string
-  /** Resultado renderizado no servidor quando a página chega com `?q=`. */
-  resultadosIniciais: ProdutoResumo[]
+  /**
+   * Resultado renderizado no servidor quando a página chega com `?q=`.
+   * `null` quando a consulta do servidor falhou — o cliente refaz a busca.
+   */
+  resultadosIniciais: ProdutoResumo[] | null
 }) {
   const [termo, setTermo] = useState(termoInicial)
   const [consulta, setConsulta] = useState(termoInicial)
-  const [resultados, setResultados] = useState<ProdutoResumo[]>(resultadosIniciais)
-  const [estado, setEstado] = useState<Estado>(termoInicial ? 'pronto' : 'inicial')
+  const [resultados, setResultados] = useState<ProdutoResumo[]>(resultadosIniciais ?? [])
+  const [estado, setEstado] = useState<Estado>(
+    !termoInicial ? 'inicial' : resultadosIniciais ? 'pronto' : 'carregando',
+  )
 
   const campoRef = useRef<HTMLInputElement>(null)
   const requisicao = useRef<AbortController | null>(null)
   // Termo já exibido e termo em voo: evitam refazer a busca que acabou de sair.
-  const exibido = useRef(termoInicial)
+  const exibido = useRef(resultadosIniciais ? termoInicial : '')
   const emVoo = useRef('')
 
   const alvo = termo.trim()
