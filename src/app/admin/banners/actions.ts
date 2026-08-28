@@ -50,13 +50,8 @@ const HOST_IMAGENS = (() => {
   }
 })()
 
-/**
- * O `next/image` só libera o bucket público do Supabase (next.config.ts).
- * Aceitar qualquer domínio aqui quebraria a renderização da loja.
- */
-export const AJUDA_IMAGEM =
-  'Cole o endereço público do Supabase Storage (https://…/storage/v1/object/public/…) ou um caminho que comece com “/”. Deixe vazio para tirar a foto do ar.'
-
+// O `next/image` só libera o bucket público do Supabase (next.config.ts);
+// aceitar qualquer domínio aqui quebraria a renderização da loja.
 const ERRO_IMAGEM =
   'Este endereço de imagem não é aceito. Use o link público do Supabase Storage ou um caminho que comece com “/”.'
 
