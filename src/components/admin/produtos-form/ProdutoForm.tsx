@@ -191,7 +191,7 @@ export function ProdutoForm({
                 rows={2}
                 name="medidas"
                 maxLength={600}
-                dica="Aparece no acordeão “Medidas e caimento” da página da peça"
+                dica="Aparece no acordeão “Medidas e numeração” da página da peça"
                 placeholder="P (36/38) · M (40/42) · G (44/46) · GG (48/50). Comprimento 118cm no tamanho M."
                 value={campos.medidas}
                 onChange={(e) => editar('medidas')(e.target.value)}
