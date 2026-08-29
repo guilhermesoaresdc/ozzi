@@ -253,18 +253,28 @@ export const getProdutosDaCategoria = cache(
 
 export const getCategoria = cache(async (slug: string): Promise<CategoryRow | null> => {
   const supabase = await createClient()
-  const { data } = await supabase.from('categories').select('*').eq('slug', slug).eq('ativo', true).maybeSingle()
+  const { data, error } = await supabase
+    .from('categories')
+    .select('*')
+    .eq('slug', slug)
+    .eq('ativo', true)
+    .maybeSingle()
+  // Falha de consulta não é "categoria não existe": deixar passar viraria um 404,
+  // que para o Google é sinal permanente e desindexa a página. Melhor estourar 500.
+  if (error) throw new Error(`Falha ao buscar a categoria ${slug}: ${error.message}`)
   return data ?? null
 })
 
 export const getProduto = cache(async (slug: string): Promise<ProdutoDetalhe | null> => {
   const supabase = await createClient()
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('products')
     .select(`${CAMPOS_PRODUTO}, categories(slug, nome), variants(*)`)
     .eq('slug', slug)
     .neq('status', 'rascunho')
     .maybeSingle()
+  // Mesma razão da categoria: banco fora do ar não pode virar 404.
+  if (error) throw new Error(`Falha ao buscar o produto ${slug}: ${error.message}`)
   return data ? paraDetalhe(data as unknown as LinhaProduto) : null
 })
 
