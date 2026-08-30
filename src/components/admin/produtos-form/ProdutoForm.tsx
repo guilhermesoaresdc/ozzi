@@ -43,6 +43,7 @@ export function ProdutoForm({
     tecido: produto?.tecido ?? '',
     preco: produto ? brlPlain(produto.preco) : '',
     promocional: produto?.preco_comparativo != null ? brlPlain(produto.preco_comparativo) : '',
+    custo: produto?.preco_custo != null ? brlPlain(produto.preco_custo) : '',
     peso: textoNumero(produto?.peso, 3),
     fornecedor: produto?.fornecedor ?? '',
     descricao: produto?.descricao ?? '',
@@ -147,6 +148,15 @@ export function ProdutoForm({
                 dica="Valor riscado ao lado do preço quando for maior que ele"
                 value={campos.promocional}
                 onChange={(e) => editar('promocional')(e.target.value)}
+              />
+              <Campo
+                label="Preço de custo"
+                name="preco_custo"
+                inputMode="decimal"
+                placeholder="opcional"
+                dica={dicaMargem(campos.custo, campos.preco)}
+                value={campos.custo}
+                onChange={(e) => editar('custo')(e.target.value)}
               />
               <Campo
                 label="Peso (kg)"
@@ -258,4 +268,21 @@ function medidasParaEnvio(linhas: LinhaMedida[]) {
       }
       return linha
     })
+}
+
+/** Margem em reais e em percentual, calculada enquanto a pessoa digita. */
+function dicaMargem(custo: string, venda: string): string {
+  const n = (v: string) => {
+    const limpo = v.replace(/\./g, '').replace(',', '.').trim()
+    const x = Number(limpo)
+    return limpo !== '' && Number.isFinite(x) ? x : null
+  }
+  const c = n(custo)
+  const v = n(venda)
+  if (c === null || c <= 0) return 'Quanto a peça custou na compra. Não aparece na loja.'
+  if (v === null || v <= 0) return 'Preencha o preço para ver a margem.'
+  const lucro = v - c
+  const pct = Math.round((lucro / c) * 100)
+  if (lucro < 0) return `Prejuízo de R$ ${Math.abs(lucro).toFixed(2).replace('.', ',')} por peça.`
+  return `Margem de R$ ${lucro.toFixed(2).replace('.', ',')} por peça · ${pct}% sobre o custo.`
 }

@@ -48,6 +48,7 @@ const Esquema = z.object({
   medidas: z.string().max(600),
   preco: z.number().min(0).max(99999),
   precoComparativo: z.number().min(0).max(99999).nullable(),
+  precoCusto: z.number().min(0).max(99999).nullable(),
   peso: z.number().min(0).max(99).nullable(),
   fotos: z.array(z.string().max(500).regex(/^(https:\/\/|\/)\S*$/i)).max(12),
   videos: z.array(z.string().max(500).regex(/^(https:\/\/|\/)\S*$/i)).max(4),
@@ -67,6 +68,7 @@ const MENSAGENS: Record<string, string> = {
   medidas: 'As medidas passam de 600 letras.',
   preco: 'O preço precisa ser um valor entre 0 e 99.999.',
   precoComparativo: 'O preço promocional precisa ser um valor entre 0 e 99.999.',
+  precoCusto: 'O preço de custo precisa ser um valor entre 0 e 99.999.',
   peso: 'O peso precisa ser um valor em quilos entre 0 e 99.',
   fotos: 'Cada foto precisa de um endereço começando com https:// — no máximo 12 por peça.',
   videos: 'Cada vídeo precisa de um endereço começando com https:// — no máximo 4 por peça.',
@@ -131,6 +133,11 @@ export async function salvarProduto(_estado: EstadoProduto, formData: FormData):
 
   const promocionalBruto = texto(formData.get('preco_comparativo'))
   const precoComparativo = promocionalBruto ? numeroBr(promocionalBruto) : null
+  const custoBruto = texto(formData.get('preco_custo'))
+  const precoCusto = custoBruto ? numeroBr(custoBruto) : null
+  if (custoBruto && precoCusto === null)
+    return { erro: 'Não entendi o preço de custo. Use o valor em reais, como 110,00, ou deixe em branco.' }
+
   if (promocionalBruto && precoComparativo === null)
     return { erro: 'Não entendi o preço promocional. Use um valor como 349,90 ou deixe o campo em branco.' }
 
@@ -158,6 +165,7 @@ export async function salvarProduto(_estado: EstadoProduto, formData: FormData):
     medidas: texto(formData.get('medidas')),
     preco,
     precoComparativo,
+    precoCusto,
     peso,
     fotos,
     videos,
@@ -195,6 +203,7 @@ export async function salvarProduto(_estado: EstadoProduto, formData: FormData):
     medidas: dados.medidas || null,
     preco: dados.preco,
     preco_comparativo: dados.precoComparativo,
+    preco_custo: dados.precoCusto,
     peso: dados.peso,
     fornecedor: dados.fornecedor || null,
     status,

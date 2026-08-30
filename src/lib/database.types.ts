@@ -89,6 +89,7 @@ export type ProductRow = {
   medidas: string | null
   preco: number
   preco_comparativo: number | null
+  preco_custo: number | null
   peso: number | null
   fornecedor: string | null
   status: ProductStatus
