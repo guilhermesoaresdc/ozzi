@@ -56,6 +56,7 @@ export function VideoOzzi({
   className = '',
   autoPlay = true,
   cinema = false,
+  fundo = '#1A1A18',
 }: {
   src: string
   poster?: string | null
@@ -65,6 +66,8 @@ export function VideoOzzi({
   autoPlay?: boolean
   /** Modo galeria: ocupa a altura disponível em vez de seguir a proporção. */
   cinema?: boolean
+  /** Fundo atrás do vídeo. Escuro na tela cheia, linho no palco do produto. */
+  fundo?: string
 }) {
   const wrapRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -137,7 +140,7 @@ export function VideoOzzi({
       style={{
         aspectRatio: cinema ? undefined : ratio,
         height: cinema ? '100%' : undefined,
-        background: '#1A1A18',
+        background: fundo,
       }}
       onMouseMove={acordar}
       onMouseEnter={acordar}
