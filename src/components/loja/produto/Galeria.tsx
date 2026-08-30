@@ -1,6 +1,6 @@
 import { Placeholder } from '@/components/ui/Placeholder'
 
-/** As quatro tomadas da peça (handoff §5.3). As fotos reais entram por `fotos`. */
+/** As quatro tomadas do handoff §5.3, usadas enquanto não há foto real. */
 const TOMADAS = [
   { legenda: 'produto · frente · 900×1200', alt: 'frente' },
   { legenda: 'produto · costas · 900×1200', alt: 'costas' },
@@ -8,20 +8,44 @@ const TOMADAS = [
   { legenda: 'look completo · 900×1200', alt: 'look completo' },
 ]
 
-export function Galeria({ nome, fotos }: { nome: string; fotos: string[] }) {
+export function Galeria({
+  nome,
+  fotos,
+  videos = [],
+}: {
+  nome: string
+  fotos: string[]
+  videos?: string[]
+}) {
+  // Sem foto cadastrada, mantém as quatro tomadas previstas no design.
+  const itens = fotos.length > 0 ? fotos : new Array(TOMADAS.length).fill(null)
+
   return (
     <div className="grid grid-cols-2" style={{ gap: 10, minWidth: 0 }}>
-      {TOMADAS.map((t, i) => (
+      {itens.map((foto: string | null, i: number) => (
         <Placeholder
-          key={t.legenda}
-          label={t.legenda}
-          src={fotos[i] ?? null}
-          alt={`${nome} — ${t.alt}`}
+          key={foto ?? TOMADAS[i]?.legenda ?? i}
+          label={foto ? undefined : (TOMADAS[i]?.legenda ?? 'produto · 900×1200')}
+          src={foto}
+          alt={`${nome}${TOMADAS[i] ? ` — ${TOMADAS[i].alt}` : ` — foto ${i + 1}`}`}
           ratio="3/4"
           densidade="denso"
           sizes="(max-width: 900px) 50vw, 30vw"
           priority={i === 0}
         />
+      ))}
+
+      {videos.map((video, i) => (
+        <figure key={video} className="contents">
+          <video
+            src={video}
+            controls
+            playsInline
+            preload="metadata"
+            aria-label={`${nome} — vídeo ${i + 1}, mostrando o caimento da peça`}
+            style={{ width: '100%', aspectRatio: '3/4', objectFit: 'cover', background: '#E9E3D9' }}
+          />
+        </figure>
       ))}
     </div>
   )

@@ -63,7 +63,7 @@ export default async function ProdutoPage({ params }: Props) {
   // Os dois primeiros itens vêm do cadastro; os dois últimos são texto da loja.
   const itensAcordeao: ItemAcordeao[] = [
     { titulo: 'Descrição', corpo: produto.descricao ?? '' },
-    { titulo: 'Medidas e numeração', corpo: produto.medidas ?? '' },
+    { titulo: 'Medidas e numeração', corpo: produto.medidas ?? '', tabela: produto.medidasTabela },
     {
       titulo: 'Sob encomenda',
       corpo: produto.aceitaEncomenda
@@ -74,7 +74,7 @@ export default async function ProdutoPage({ params }: Props) {
       titulo: 'Envio e retirada',
       corpo: `Retirada grátis combinada no Centro de Várzea Alegre em até 2 horas. Motoboy local no mesmo dia. Correios para todo o Brasil, grátis acima de R$ ${num(freteGratis)}.`,
     },
-  ].filter((i) => i.corpo !== '')
+  ].filter((i) => i.corpo !== '' || (i.tabela?.length ?? 0) > 0)
 
   const mensagem = `Olá! Tenho uma dúvida sobre a peça ${produto.nome} (Ref. ${produto.ref}).`
   const hrefWhatsapp = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(mensagem)}`
@@ -105,7 +105,7 @@ export default async function ProdutoPage({ params }: Props) {
           alignItems: 'start',
         }}
       >
-        <Galeria nome={produto.nome} fotos={produto.fotos} />
+        <Galeria nome={produto.nome} fotos={produto.fotos} videos={produto.videos} />
 
         <PainelCompra
           produto={{

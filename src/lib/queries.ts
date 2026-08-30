@@ -40,9 +40,20 @@ export interface ProdutoDetalhe extends ProdutoResumo {
   aceitaEncomenda: boolean
   prazoEncomendaDias: number
   fotos: string[]
+  videos: string[]
+  medidasTabela: MedidaPorTamanho[]
   variantes: VariantRow[]
   categoriaId: string | null
   criadoEm: string
+}
+
+/** Uma linha da tabela de medidas, em centímetros. */
+export interface MedidaPorTamanho {
+  tamanho: string
+  busto?: string
+  cintura?: string
+  quadril?: string
+  comprimento?: string
 }
 
 export interface CategoriaComContagem extends CategoryRow {
@@ -50,13 +61,14 @@ export interface CategoriaComContagem extends CategoryRow {
 }
 
 const CAMPOS_PRODUTO =
-  'id, slug, nome, ref, preco, preco_comparativo, selo, fotos, status, destaque, criado_em, category_id, tecido, descricao, medidas, peso, fornecedor, aceita_encomenda, prazo_encomenda_dias'
+  'id, slug, nome, ref, preco, preco_comparativo, selo, fotos, videos, medidas_tabela, status, destaque, criado_em, category_id, tecido, descricao, medidas, peso, fornecedor, aceita_encomenda, prazo_encomenda_dias'
 
 type LinhaProduto = Pick<
   ProductRow,
   | 'id' | 'slug' | 'nome' | 'ref' | 'preco' | 'preco_comparativo' | 'selo' | 'fotos'
   | 'status' | 'destaque' | 'criado_em' | 'category_id' | 'tecido' | 'descricao'
   | 'medidas' | 'peso' | 'fornecedor' | 'aceita_encomenda' | 'prazo_encomenda_dias'
+  | 'videos' | 'medidas_tabela'
 > & {
   categories?: { slug: string; nome: string } | null
   variants?: VariantRow[] | null
@@ -64,6 +76,19 @@ type LinhaProduto = Pick<
 
 function fotosDe(fotos: unknown): string[] {
   return Array.isArray(fotos) ? (fotos.filter((f) => typeof f === 'string') as string[]) : []
+}
+
+function medidasDe(bruto: unknown): MedidaPorTamanho[] {
+  if (!Array.isArray(bruto)) return []
+  return bruto
+    .filter((l): l is Record<string, unknown> => typeof l === 'object' && l !== null && typeof l.tamanho === 'string')
+    .map((l) => ({
+      tamanho: String(l.tamanho),
+      busto: l.busto ? String(l.busto) : undefined,
+      cintura: l.cintura ? String(l.cintura) : undefined,
+      quadril: l.quadril ? String(l.quadril) : undefined,
+      comprimento: l.comprimento ? String(l.comprimento) : undefined,
+    }))
 }
 
 function coresDe(variantes: VariantRow[] | null | undefined) {
@@ -105,6 +130,8 @@ function paraDetalhe(p: LinhaProduto): ProdutoDetalhe {
     aceitaEncomenda: p.aceita_encomenda,
     prazoEncomendaDias: p.prazo_encomenda_dias,
     fotos: fotosDe(p.fotos),
+    videos: fotosDe(p.videos),
+    medidasTabela: medidasDe(p.medidas_tabela),
     variantes: [...(p.variants ?? [])].sort(
       (a, b) => a.ordem - b.ordem || a.cor_nome.localeCompare(b.cor_nome),
     ),

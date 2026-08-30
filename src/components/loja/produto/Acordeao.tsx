@@ -1,10 +1,60 @@
 'use client'
 
 import type { RefObject } from 'react'
+import type { MedidaPorTamanho } from '@/lib/queries'
 
 export interface ItemAcordeao {
   titulo: string
   corpo: string
+  /** Medidas por numeração, exibidas como tabela acima do texto. */
+  tabela?: MedidaPorTamanho[]
+}
+
+const COLUNAS: { chave: keyof Omit<MedidaPorTamanho, 'tamanho'>; rotulo: string }[] = [
+  { chave: 'busto', rotulo: 'Busto' },
+  { chave: 'cintura', rotulo: 'Cintura' },
+  { chave: 'quadril', rotulo: 'Quadril' },
+  { chave: 'comprimento', rotulo: 'Comprimento' },
+]
+
+function TabelaDeMedidas({ linhas }: { linhas: MedidaPorTamanho[] }) {
+  // Só mostra a coluna que tem pelo menos um valor preenchido.
+  const colunas = COLUNAS.filter((c) => linhas.some((l) => l[c.chave]))
+  if (colunas.length === 0) return null
+
+  return (
+    <div className="overflow-x-auto" style={{ marginBottom: 16 }}>
+      <table style={{ width: '100%', minWidth: 320, borderCollapse: 'collapse', fontSize: 13 }}>
+        <caption className="sr-only">Medidas da peça por numeração, em centímetros</caption>
+        <thead>
+          <tr>
+            <th scope="col" className="oz-label" style={{ textAlign: 'left', padding: '8px 10px 8px 0' }}>
+              Numeração
+            </th>
+            {colunas.map((c) => (
+              <th key={c.chave} scope="col" className="oz-label" style={{ textAlign: 'left', padding: '8px 10px' }}>
+                {c.rotulo}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {linhas.map((linha) => (
+            <tr key={linha.tamanho} style={{ borderTop: '1px solid #E4DDD1' }}>
+              <th scope="row" style={{ textAlign: 'left', padding: '9px 10px 9px 0', fontWeight: 400 }}>
+                {linha.tamanho}
+              </th>
+              {colunas.map((c) => (
+                <td key={c.chave} style={{ padding: '9px 10px', color: '#5C574D' }}>
+                  {linha[c.chave] ? `${linha[c.chave]} cm` : '—'}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
 }
 
 /**
@@ -63,18 +113,22 @@ export function Acordeao({
               role="region"
               aria-labelledby={`${idBase}-titulo-${i}`}
               hidden={!estaAberto}
+              style={{ paddingTop: 12 }}
             >
-              <p
-                style={{
-                  fontSize: 13.5,
-                  lineHeight: 1.7,
-                  color: '#5C574D',
-                  margin: '12px 0 0',
-                  textWrap: 'pretty',
-                }}
-              >
-                {item.corpo}
-              </p>
+              {item.tabela && item.tabela.length > 0 && <TabelaDeMedidas linhas={item.tabela} />}
+              {item.corpo && (
+                <p
+                  style={{
+                    fontSize: 13.5,
+                    lineHeight: 1.7,
+                    color: '#5C574D',
+                    margin: 0,
+                    textWrap: 'pretty',
+                  }}
+                >
+                  {item.corpo}
+                </p>
+              )}
             </div>
           </div>
         )
