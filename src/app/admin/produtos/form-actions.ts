@@ -28,6 +28,14 @@ const Linha = z.object({
     .min(1),
 })
 
+const LinhaMedida = z.object({
+  tamanho: z.string().min(1).max(12),
+  busto: z.string().max(8).optional(),
+  cintura: z.string().max(8).optional(),
+  quadril: z.string().max(8).optional(),
+  comprimento: z.string().max(8).optional(),
+})
+
 const Esquema = z.object({
   id: z.string().regex(UUID).nullable(),
   nome: z.string().min(2).max(120),
@@ -42,6 +50,8 @@ const Esquema = z.object({
   precoComparativo: z.number().min(0).max(99999).nullable(),
   peso: z.number().min(0).max(99).nullable(),
   fotos: z.array(z.string().max(500).regex(/^(https:\/\/|\/)\S*$/i)).max(12),
+  videos: z.array(z.string().max(500).regex(/^(https:\/\/|\/)\S*$/i)).max(4),
+  medidasTabela: z.array(LinhaMedida).max(12),
   grade: z.array(Linha).max(24),
 })
 
@@ -59,6 +69,8 @@ const MENSAGENS: Record<string, string> = {
   precoComparativo: 'O preço promocional precisa ser um valor entre 0 e 99.999.',
   peso: 'O peso precisa ser um valor em quilos entre 0 e 99.',
   fotos: 'Cada foto precisa de um endereço começando com https:// — no máximo 12 por peça.',
+  videos: 'Cada vídeo precisa de um endereço começando com https:// — no máximo 4 por peça.',
+  medidasTabela: 'Confira a tabela de medidas: cada linha precisa da numeração, e as medidas em centímetros.',
   grade: 'Confira a grade de estoque: são no máximo 24 cores.',
   'grade.cor': 'Dê um nome para cada cor da grade de estoque (até 40 letras).',
   'grade.hex': 'A cor do mostruário precisa de um código como #D9CDBA.',
@@ -128,8 +140,11 @@ export async function salvarProduto(_estado: EstadoProduto, formData: FormData):
     return { erro: 'Não entendi o peso. Use o valor em quilos, como 0,42, ou deixe o campo em branco.' }
 
   const fotos = json<unknown[]>(texto(formData.get('fotos')) || '[]')
+  const videos = json<unknown[]>(texto(formData.get('videos')) || '[]')
+  const medidasTabela = json<unknown[]>(texto(formData.get('medidas_tabela')) || '[]')
   const grade = json<unknown[]>(texto(formData.get('grade')) || '[]')
-  if (!Array.isArray(fotos) || !Array.isArray(grade)) return { erro: ERRO_ENTRADA }
+  if (!Array.isArray(fotos) || !Array.isArray(videos) || !Array.isArray(medidasTabela) || !Array.isArray(grade))
+    return { erro: ERRO_ENTRADA }
 
   const entrada = Esquema.safeParse({
     id: texto(formData.get('id')) || null,
@@ -145,6 +160,8 @@ export async function salvarProduto(_estado: EstadoProduto, formData: FormData):
     precoComparativo,
     peso,
     fotos,
+    videos,
+    medidasTabela,
     grade,
   })
   if (!entrada.success) return { erro: mensagem(entrada.error) }
@@ -184,6 +201,8 @@ export async function salvarProduto(_estado: EstadoProduto, formData: FormData):
     aceita_encomenda: formData.get('aceita_encomenda') !== null,
     prazo_encomenda_dias: prazo,
     fotos: dados.fotos,
+    videos: dados.videos,
+    medidas_tabela: dados.medidasTabela,
   }
 
   let produtoId: string

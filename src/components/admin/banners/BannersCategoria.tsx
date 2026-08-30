@@ -2,11 +2,12 @@
 
 import { useActionState, useId, useState } from 'react'
 import { Card } from '@/components/admin/Card'
+import { UploadMidia } from '@/components/admin/UploadMidia'
 import { Placeholder } from '@/components/ui/Placeholder'
 import { CheckSquare } from '@/components/ui/Checkbox'
 import { criarCategoria, salvarImagemCategoria, type EstadoAcao } from '@/app/admin/banners/actions'
 import type { CategoryRow } from '@/lib/database.types'
-import { AJUDA, AJUDA_IMAGEM, BOTAO, BotaoTracejado, CAMPO, Campo, Recado } from './Pecas'
+import { AJUDA, BOTAO, BotaoTracejado, CAMPO, Campo, Recado } from './Pecas'
 
 const INICIAL: EstadoAcao = {}
 
@@ -124,20 +125,7 @@ export function BannersCategoria({ categorias }: { categorias: CategoryRow[] }) 
           style={CAIXA}
         >
           <input type="hidden" name="categoria" value={emEdicao.id} />
-          <Campo
-            id={`${base}-imagem`}
-            rotulo={`Imagem de ${emEdicao.nome}`}
-            ajuda={AJUDA_IMAGEM}
-          >
-            <input
-              id={`${base}-imagem`}
-              name="imagem"
-              defaultValue={emEdicao.imagem_banner ?? ''}
-              placeholder="https://…/storage/v1/object/public/…"
-              className="oz-input"
-              style={CAMPO}
-            />
-          </Campo>
+          <ImagemDaCategoria nome={emEdicao.nome} inicial={emEdicao.imagem_banner ?? ''} />
 
           <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
             <button
@@ -245,5 +233,30 @@ export function BannersCategoria({ categorias }: { categorias: CategoryRow[] }) 
         </form>
       )}
     </Card>
+  )
+}
+
+/**
+ * Campo de imagem de uma categoria. O formulário que o envolve tem key pelo id
+ * da categoria, então trocar de categoria remonta este componente com o valor
+ * certo — por isso o estado local pode nascer da prop sem sincronização extra.
+ */
+function ImagemDaCategoria({ nome, inicial }: { nome: string; inicial: string }) {
+  const [imagem, setImagem] = useState(inicial)
+
+  return (
+    <div className="flex flex-col gap-[10px]">
+      <span className="oz-label">Imagem de {nome}</span>
+      <UploadMidia
+        valor={imagem ? [imagem] : []}
+        onChange={(lista) => setImagem(lista[0] ?? '')}
+        pasta="banners/categorias"
+        tipo="imagem"
+        max={1}
+        singular="imagem"
+        plural="imagens"
+      />
+      <input type="hidden" name="imagem" value={imagem} />
+    </div>
   )
 }

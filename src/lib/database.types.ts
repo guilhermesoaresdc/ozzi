@@ -82,6 +82,8 @@ export type ProductRow = {
   prazo_encomenda_dias: number
   selo: string | null
   fotos: Json
+  videos: Json
+  medidas_tabela: Json
   destaque: boolean
   criado_em: string
 }

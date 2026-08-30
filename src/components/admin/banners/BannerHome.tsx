@@ -2,10 +2,11 @@
 
 import { useActionState, useId, useState } from 'react'
 import { Card } from '@/components/admin/Card'
+import { UploadMidia } from '@/components/admin/UploadMidia'
 import { Placeholder } from '@/components/ui/Placeholder'
 import { publicarBannerHome, type EstadoAcao } from '@/app/admin/banners/actions'
 import type { BannerRow } from '@/lib/database.types'
-import { AJUDA, AJUDA_IMAGEM, BOTAO, CAMPO, Campo, Recado } from './Pecas'
+import { AJUDA, BOTAO, CAMPO, Campo, Recado } from './Pecas'
 import { dataLocal, diaMes } from './periodo'
 
 const INICIAL: EstadoAcao = {}
@@ -83,21 +84,19 @@ export function BannerHome({ banner }: { banner: BannerRow | null }) {
             </button>
           </div>
 
-          {trocando ? (
-            <Campo id={`${base}-imagem`} rotulo="Endereço da imagem" ajuda={AJUDA_IMAGEM}>
-              <input
-                id={`${base}-imagem`}
-                name="imagem"
-                value={imagem}
-                onChange={(e) => setImagem(e.target.value)}
-                placeholder="https://…/storage/v1/object/public/…"
-                className="oz-input"
-                style={CAMPO}
-              />
-            </Campo>
-          ) : (
-            <input type="hidden" name="imagem" value={imagem} />
+          {trocando && (
+            <UploadMidia
+              valor={imagem ? [imagem] : []}
+              onChange={(lista) => setImagem(lista[0] ?? '')}
+              pasta="banners/home"
+              tipo="imagem"
+              max={1}
+              singular="imagem"
+              plural="imagens"
+              ratio="4/5"
+            />
           )}
+          <input type="hidden" name="imagem" value={imagem} />
 
           <p style={AJUDA}>recomendado 1040×1300, até 800kb</p>
 

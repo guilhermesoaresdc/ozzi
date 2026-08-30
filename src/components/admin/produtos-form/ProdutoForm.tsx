@@ -6,6 +6,7 @@ import type { CategoryRow, ProductRow, ProductStatus, VariantRow } from '@/lib/d
 import { brlPlain } from '@/lib/format'
 import { AreaTexto, Campo, Selecao } from './Campos'
 import { Fotos } from './Fotos'
+import { TabelaMedidas, type LinhaMedida } from './TabelaMedidas'
 import { GradeEstoque } from './GradeEstoque'
 import { Publicacao } from './Publicacao'
 import { SobEncomenda } from './SobEncomenda'
@@ -53,6 +54,8 @@ export function ProdutoForm({
   const [aceita, setAceita] = useState(produto?.aceita_encomenda ?? true)
   const [prazo, setPrazo] = useState(produto?.prazo_encomenda_dias ?? 10)
   const [fotos, setFotos] = useState<string[]>(() => fotosDoProduto(produto?.fotos))
+  const [videos, setVideos] = useState<string[]>(() => fotosDoProduto(produto?.videos))
+  const [medidas, setMedidas] = useState<LinhaMedida[]>(() => medidasIniciais(produto?.medidas_tabela))
   const [grade, setGrade] = useState(() => gradeInicial(variantes))
 
   const editar = (chave: keyof typeof campos) => (valor: string) =>
@@ -65,6 +68,8 @@ export function ProdutoForm({
     <form action={acao}>
       <input type="hidden" name="id" value={produto?.id ?? ''} />
       <input type="hidden" name="fotos" value={JSON.stringify(fotos)} />
+      <input type="hidden" name="videos" value={JSON.stringify(videos)} />
+      <input type="hidden" name="medidas_tabela" value={JSON.stringify(medidasParaEnvio(medidas))} />
       <input type="hidden" name="grade" value={JSON.stringify(linhasParaEnvio(grade.linhas, grade.numeracao))} />
 
       <div
@@ -207,7 +212,15 @@ export function ProdutoForm({
             onNumeracao={setNumeracao}
           />
 
-          <Fotos fotos={fotos} onFotos={setFotos} />
+          <TabelaMedidas linhas={medidas} onLinhas={setMedidas} />
+
+          <Fotos
+            fotos={fotos}
+            onFotos={setFotos}
+            videos={videos}
+            onVideos={setVideos}
+            pasta={campos.ref.trim() || produto?.ref || 'sem-referencia'}
+          />
         </div>
 
         <div className="flex flex-col gap-[22px]" style={{ position: 'sticky', top: 104 }}>
@@ -217,4 +230,32 @@ export function ProdutoForm({
       </div>
     </form>
   )
+}
+
+/** Lê medidas_tabela do banco para o formato do formulário. */
+function medidasIniciais(bruto: unknown): LinhaMedida[] {
+  if (!Array.isArray(bruto)) return []
+  return bruto
+    .filter((l): l is Record<string, unknown> => typeof l === 'object' && l !== null)
+    .map((l) => ({
+      tamanho: String(l.tamanho ?? ''),
+      busto: l.busto == null ? '' : String(l.busto),
+      cintura: l.cintura == null ? '' : String(l.cintura),
+      quadril: l.quadril == null ? '' : String(l.quadril),
+      comprimento: l.comprimento == null ? '' : String(l.comprimento),
+    }))
+}
+
+/** Descarta linha sem numeração e campo vazio, para não gravar lixo. */
+function medidasParaEnvio(linhas: LinhaMedida[]) {
+  return linhas
+    .filter((l) => l.tamanho.trim() !== '')
+    .map((l) => {
+      const linha: Record<string, string> = { tamanho: l.tamanho.trim() }
+      for (const chave of ['busto', 'cintura', 'quadril', 'comprimento'] as const) {
+        const valor = l[chave].trim()
+        if (valor) linha[chave] = valor
+      }
+      return linha
+    })
 }
