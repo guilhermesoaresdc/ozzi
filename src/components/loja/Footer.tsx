@@ -19,6 +19,7 @@ const COLUNAS = [
       { label: 'Trocas e devoluções', href: '/ajuda/trocas' },
       { label: 'Prazos de entrega', href: '/ajuda/prazos' },
       { label: 'Tabela de medidas', href: '/ajuda/medidas' },
+      { label: 'Consultoria de cor', href: '/consultor' },
       { label: 'Formas de pagamento', href: '/ajuda/pagamento' },
     ],
   },

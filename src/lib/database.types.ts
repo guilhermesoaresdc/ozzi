@@ -15,6 +15,19 @@ export type OrderStatus =
   | 'cancelado'
 export type DeliveryMethod = 'retirada' | 'motoboy' | 'pac' | 'sedex'
 export type PaymentMethod = 'pix' | 'cartao' | 'whatsapp' | 'na_retirada'
+export type PerfilEstiloRow = {
+  id: string
+  customer_id: string | null
+  visitante_id: string | null
+  subtom: string
+  estacao: string | null
+  contraste: string | null
+  paleta: Json
+  evitar: Json
+  resumo: string | null
+  criado_em: string
+}
+
 export type ProvaStatus = 'processando' | 'pronta' | 'erro'
 export type SizeCode = 'P' | 'M' | 'G' | 'GG' | 'U'
 export type BannerType = 'home_hero' | 'categoria' | 'faixa_colecao'
@@ -330,6 +343,10 @@ export type Database = {
       email_lists: Table<EmailListRow>
       email_campaigns: Table<EmailCampaignRow, [FK<'email_campaigns_lista_id_fkey', 'lista_id', 'email_lists'>]>
       email_automations: Table<EmailAutomationRow>
+      perfis_estilo: Table<
+        PerfilEstiloRow,
+        [FK<'perfis_estilo_customer_id_fkey', 'customer_id', 'customers'>]
+      >
       provas: Table<
         ProvaRow,
         [
@@ -369,6 +386,10 @@ export type Database = {
         Returns: Json
       }
       prova_cota: {
+        Args: { p_visitante?: string | null }
+        Returns: Json
+      }
+      consultor_cota: {
         Args: { p_visitante?: string | null }
         Returns: Json
       }
