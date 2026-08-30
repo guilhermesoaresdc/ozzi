@@ -1,13 +1,52 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+
+/* Ícones de traço fino, no peso da marca (handoff §9). */
+const Play = () => (
+  <svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor" aria-hidden>
+    <path d="M4 2.5v11l9-5.5-9-5.5Z" />
+  </svg>
+)
+const Pause = () => (
+  <svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor" aria-hidden>
+    <rect x="4" y="2.5" width="2.6" height="11" />
+    <rect x="9.4" y="2.5" width="2.6" height="11" />
+  </svg>
+)
+const Som = () => (
+  <svg viewBox="0 0 18 18" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.1" aria-hidden>
+    <path d="M3 6.8h2.6L9.4 3.6v10.8L5.6 11.2H3V6.8Z" strokeLinejoin="round" />
+    <path d="M12 6.4a3.4 3.4 0 0 1 0 5.2M14 4.4a6.2 6.2 0 0 1 0 9.2" strokeLinecap="round" />
+  </svg>
+)
+const Mudo = () => (
+  <svg viewBox="0 0 18 18" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.1" aria-hidden>
+    <path d="M3 6.8h2.6L9.4 3.6v10.8L5.6 11.2H3V6.8Z" strokeLinejoin="round" />
+    <path d="m12.2 6.8 3.6 4.4M15.8 6.8l-3.6 4.4" strokeLinecap="round" />
+  </svg>
+)
+const Expandir = () => (
+  <svg viewBox="0 0 18 18" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.1" aria-hidden>
+    <path d="M6.6 2.8H2.8v3.8M11.4 2.8h3.8v3.8M15.2 11.4v3.8h-3.8M2.8 11.4v3.8h3.8" strokeLinecap="round" />
+  </svg>
+)
+
+function relogio(s: number): string {
+  if (!Number.isFinite(s)) return '0:00'
+  const m = Math.floor(s / 60)
+  return `${m}:${String(Math.floor(s % 60)).padStart(2, '0')}`
+}
 
 /**
- * Reprodutor da loja. O controle nativo do navegador é feio e cada sistema
- * desenha o dele — aqui a camada é nossa, com as arestas retas da marca.
+ * Reprodutor da loja.
  *
- * Toca sozinho e mudo: navegador nenhum deixa começar com som, e som que
- * dispara sem pedir espanta cliente. O botão de som fica visível para quem quiser.
+ * O controle nativo é pesado e cada navegador desenha o seu — numa vitrine de
+ * moda ele rouba a peça. Aqui a barra é fina, some sozinha durante a reprodução
+ * e volta ao menor movimento do ponteiro.
+ *
+ * Começa mudo porque navegador nenhum permite som automático: com som, o vídeo
+ * simplesmente não tocaria.
  */
 export function VideoOzzi({
   src,
@@ -16,7 +55,7 @@ export function VideoOzzi({
   ratio = '3/4',
   className = '',
   autoPlay = true,
-  className_video,
+  cinema = false,
 }: {
   src: string
   poster?: string | null
@@ -24,113 +63,203 @@ export function VideoOzzi({
   ratio?: string
   className?: string
   autoPlay?: boolean
-  className_video?: string
+  /** Modo galeria: ocupa a altura disponível em vez de seguir a proporção. */
+  cinema?: boolean
 }) {
+  const wrapRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
-  const [tocando, setTocando] = useState(autoPlay)
+  const ociosoRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const [tocando, setTocando] = useState(false)
   const [mudo, setMudo] = useState(true)
-  const [progresso, setProgresso] = useState(0)
+  const [tempo, setTempo] = useState(0)
+  const [duracao, setDuracao] = useState(0)
+  const [visivel, setVisivel] = useState(true)
   const [pronto, setPronto] = useState(false)
+
+  const progresso = duracao > 0 ? (tempo / duracao) * 100 : 0
+
+  const acordar = useCallback(() => {
+    setVisivel(true)
+    if (ociosoRef.current) clearTimeout(ociosoRef.current)
+    ociosoRef.current = setTimeout(() => setVisivel(false), 2200)
+  }, [])
 
   useEffect(() => {
     const v = videoRef.current
     if (!v || !autoPlay) return
-
-    // Quem pediu menos movimento no sistema não recebe play automático.
-    const menosMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (menosMovimento) {
-      setTocando(false)
-      return
-    }
-
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     v.play()
       .then(() => setTocando(true))
       .catch(() => setTocando(false))
   }, [autoPlay, src])
 
+  useEffect(() => () => { if (ociosoRef.current) clearTimeout(ociosoRef.current) }, [])
+
   function alternar() {
     const v = videoRef.current
     if (!v) return
-    if (v.paused) {
-      void v.play().then(() => setTocando(true))
-    } else {
+    if (v.paused) void v.play().then(() => setTocando(true))
+    else {
       v.pause()
       setTocando(false)
+      setVisivel(true)
     }
   }
 
-  function alternarSom() {
+  function buscar(e: React.MouseEvent<HTMLDivElement>) {
     const v = videoRef.current
-    if (!v) return
-    v.muted = !v.muted
-    setMudo(v.muted)
+    if (!v || !v.duration) return
+    const r = e.currentTarget.getBoundingClientRect()
+    v.currentTime = ((e.clientX - r.left) / r.width) * v.duration
+  }
+
+  async function telaCheia() {
+    const el = wrapRef.current
+    if (!el) return
+    if (document.fullscreenElement) await document.exitFullscreen()
+    else await el.requestFullscreen?.().catch(() => undefined)
+  }
+
+  const botao: React.CSSProperties = {
+    color: '#F2EEE7',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    lineHeight: 1,
   }
 
   return (
-    <div className={`group relative overflow-hidden ${className}`} style={{ aspectRatio: ratio, background: '#E9E3D9' }}>
+    <div
+      ref={wrapRef}
+      className={`relative overflow-hidden ${className}`}
+      style={{
+        aspectRatio: cinema ? undefined : ratio,
+        height: cinema ? '100%' : undefined,
+        background: '#1A1A18',
+      }}
+      onMouseMove={acordar}
+      onMouseEnter={acordar}
+      onMouseLeave={() => tocando && setVisivel(false)}
+    >
       <video
         ref={videoRef}
         src={src}
         poster={poster ?? undefined}
-        muted
+        muted={mudo}
         loop
         playsInline
         preload="metadata"
         aria-label={alt}
-        className={`h-full w-full object-cover ${className_video ?? ''}`}
-        onLoadedData={() => setPronto(true)}
-        onTimeUpdate={(e) => {
-          const v = e.currentTarget
-          if (v.duration) setProgresso((v.currentTime / v.duration) * 100)
-        }}
         onClick={alternar}
-        style={{ cursor: 'pointer' }}
+        onLoadedMetadata={(e) => {
+          setDuracao(e.currentTarget.duration)
+          setPronto(true)
+        }}
+        onTimeUpdate={(e) => setTempo(e.currentTarget.currentTime)}
+        onPlay={() => setTocando(true)}
+        onPause={() => setTocando(false)}
+        className={`h-full w-full ${cinema ? 'object-contain' : 'object-cover'}`}
+        style={{ cursor: 'pointer', display: 'block' }}
       />
 
-      {/* Camada de controle: discreta, aparece ao passar o mouse ou ao focar */}
-      <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-within:opacity-100"
-        style={{ background: 'linear-gradient(to top, rgba(35,35,32,.55), transparent)' }}
-      >
+      {/* Play grande, só quando está parado: convite discreto, sem poluir */}
+      {pronto && !tocando && (
         <button
           type="button"
           onClick={alternar}
-          aria-label={tocando ? 'Pausar vídeo' : 'Reproduzir vídeo'}
-          className="pointer-events-auto flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center"
-          style={{ background: '#F2EEE7', color: '#232320', fontSize: 11, lineHeight: 1 }}
+          aria-label="Reproduzir vídeo"
+          className="absolute inset-0 flex cursor-pointer items-center justify-center"
         >
-          <span aria-hidden>{tocando ? '❚❚' : '▶'}</span>
+          <span
+            className="flex items-center justify-center"
+            style={{
+              width: 56,
+              height: 56,
+              background: 'rgba(242,238,231,.92)',
+              color: '#232320',
+              paddingLeft: 3,
+            }}
+          >
+            <svg viewBox="0 0 16 16" width="17" height="17" fill="currentColor" aria-hidden>
+              <path d="M4 2.5v11l9-5.5-9-5.5Z" />
+            </svg>
+          </span>
         </button>
-
-        <button
-          type="button"
-          onClick={alternarSom}
-          aria-label={mudo ? 'Ativar som' : 'Desativar som'}
-          className="pointer-events-auto cursor-pointer px-[10px] py-[6px] uppercase"
-          style={{
-            background: 'rgba(242,238,231,.92)',
-            color: '#232320',
-            fontSize: 9.5,
-            letterSpacing: '.16em',
-          }}
-        >
-          {mudo ? 'Som' : 'Mudo'}
-        </button>
-      </div>
-
-      {/* Fio de progresso, na cor de destaque da marca */}
-      <div className="absolute inset-x-0 bottom-0 h-[2px]" style={{ background: 'rgba(242,238,231,.25)' }}>
-        <div
-          className="h-full"
-          style={{ width: `${progresso}%`, background: '#C4A88B', transition: 'width 120ms linear' }}
-        />
-      </div>
-
-      {!pronto && (
-        <span className="absolute inset-0 flex items-center justify-center" style={{ fontSize: 11, color: '#8A8375' }}>
-          carregando…
-        </span>
       )}
+
+      {/* Barra de controle: fina, some sozinha durante a reprodução */}
+      <div
+        className="absolute inset-x-0 bottom-0 transition-opacity duration-300"
+        style={{
+          opacity: visivel || !tocando ? 1 : 0,
+          pointerEvents: visivel || !tocando ? 'auto' : 'none',
+          background: 'linear-gradient(to top, rgba(20,20,18,.78) 0%, rgba(20,20,18,.35) 55%, transparent 100%)',
+          paddingTop: 34,
+        }}
+      >
+        {/* Trilha de progresso: alvo de clique alto, fio fino */}
+        <div
+          role="slider"
+          tabIndex={0}
+          aria-label="Posição do vídeo"
+          aria-valuemin={0}
+          aria-valuemax={Math.round(duracao)}
+          aria-valuenow={Math.round(tempo)}
+          onClick={buscar}
+          onKeyDown={(e) => {
+            const v = videoRef.current
+            if (!v) return
+            if (e.key === 'ArrowRight') v.currentTime = Math.min(v.duration, v.currentTime + 2)
+            if (e.key === 'ArrowLeft') v.currentTime = Math.max(0, v.currentTime - 2)
+          }}
+          className="group/trilha cursor-pointer px-4 pb-[6px]"
+        >
+          <div style={{ height: 2, background: 'rgba(242,238,231,.28)', position: 'relative' }}>
+            <div style={{ width: `${progresso}%`, height: '100%', background: '#C4A88B', transition: 'width 100ms linear' }} />
+            <span
+              className="absolute top-1/2 opacity-0 transition-opacity group-hover/trilha:opacity-100"
+              style={{
+                left: `${progresso}%`,
+                width: 7,
+                height: 7,
+                marginLeft: -3.5,
+                marginTop: -3.5,
+                background: '#F2EEE7',
+              }}
+              aria-hidden
+            />
+          </div>
+        </div>
+
+        <div className="flex items-center gap-4 px-4 pb-[13px]">
+          <button type="button" onClick={alternar} aria-label={tocando ? 'Pausar' : 'Reproduzir'} style={botao}>
+            {tocando ? <Pause /> : <Play />}
+          </button>
+
+          <span className="tabular-nums" style={{ fontSize: 10.5, letterSpacing: '.1em', color: '#B3ADA0' }}>
+            {relogio(tempo)}
+            <span style={{ opacity: 0.45 }}> / </span>
+            {relogio(duracao)}
+          </span>
+
+          <span className="flex-1" />
+
+          <button
+            type="button"
+            onClick={() => setMudo((m) => !m)}
+            aria-label={mudo ? 'Ativar som' : 'Desativar som'}
+            style={botao}
+          >
+            {mudo ? <Mudo /> : <Som />}
+          </button>
+
+          <button type="button" onClick={telaCheia} aria-label="Tela cheia" style={botao}>
+            <Expandir />
+          </button>
+        </div>
+      </div>
     </div>
   )
 }

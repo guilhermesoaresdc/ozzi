@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ehVideo } from '@/lib/storage'
+import { VideoOzzi } from '@/components/loja/VideoOzzi'
 
 export interface ItemMidia {
   src: string
@@ -140,18 +141,9 @@ export function Lightbox({
           }}
         >
           {video ? (
-            <video
-              key={atual.src}
-              src={atual.src}
-              autoPlay
-              muted
-              loop
-              playsInline
-              controls
-              aria-label={atual.alt}
-              className="max-h-full max-w-full object-contain"
-              style={{ maxHeight: '100%' }}
-            />
+            <div className="flex h-full max-h-full items-center justify-center" style={{ width: 'min(100%, 62vh)' }}>
+              <VideoOzzi key={atual.src} src={atual.src} alt={atual.alt} cinema />
+            </div>
           ) : (
             <button
               type="button"

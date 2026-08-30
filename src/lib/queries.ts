@@ -106,7 +106,9 @@ function coresDe(variantes: VariantRow[] | null | undefined) {
  * faz a loja parecer um catálogo de mentira.
  */
 export function ehVendavel(p: ProdutoResumo): boolean {
-  return p.prontaEntrega && (p.foto !== null || p.temVideo)
+  // Preço zero é peça sem preço definido, não peça de graça. Ela não pode
+  // chegar à vitrine: alguém fecharia o pedido sem pagar nada.
+  return p.preco > 0 && p.prontaEntrega && (p.foto !== null || p.temVideo)
 }
 
 export function apenasVendaveis(lista: ProdutoResumo[]): ProdutoResumo[] {
