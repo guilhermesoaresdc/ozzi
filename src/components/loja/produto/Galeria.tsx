@@ -1,4 +1,5 @@
 import { Placeholder } from '@/components/ui/Placeholder'
+import { VideoOzzi } from '@/components/loja/VideoOzzi'
 
 /** As quatro tomadas do handoff §5.3, usadas enquanto não há foto real. */
 const TOMADAS = [
@@ -22,6 +23,17 @@ export function Galeria({
 
   return (
     <div className="grid grid-cols-2" style={{ gap: 10, minWidth: 0 }}>
+      {/* O vídeo vem primeiro e já entra tocando: é o que mostra o caimento. */}
+      {videos.map((video, i) => (
+        <VideoOzzi
+          key={video}
+          src={video}
+          poster={fotos[0] ?? null}
+          alt={`${nome} — vídeo ${i + 1}, mostrando o caimento da peça`}
+          ratio="3/4"
+        />
+      ))}
+
       {itens.map((foto: string | null, i: number) => (
         <Placeholder
           key={foto ?? TOMADAS[i]?.legenda ?? i}
@@ -31,21 +43,8 @@ export function Galeria({
           ratio="3/4"
           densidade="denso"
           sizes="(max-width: 900px) 50vw, 30vw"
-          priority={i === 0}
+          priority={i === 0 && videos.length === 0}
         />
-      ))}
-
-      {videos.map((video, i) => (
-        <figure key={video} className="contents">
-          <video
-            src={video}
-            controls
-            playsInline
-            preload="metadata"
-            aria-label={`${nome} — vídeo ${i + 1}, mostrando o caimento da peça`}
-            style={{ width: '100%', aspectRatio: '3/4', objectFit: 'cover', background: '#E9E3D9' }}
-          />
-        </figure>
       ))}
     </div>
   )

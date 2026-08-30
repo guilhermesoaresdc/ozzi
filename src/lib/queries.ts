@@ -25,6 +25,9 @@ export interface ProdutoResumo {
   selo: string | null
   cores: { nome: string; hex: string }[]
   foto: string | null
+  fotos: string[]
+  videos: string[]
+  temVideo: boolean
   estoque: number
   prontaEntrega: boolean
   categoriaSlug: string | null
@@ -39,8 +42,6 @@ export interface ProdutoDetalhe extends ProdutoResumo {
   fornecedor: string | null
   aceitaEncomenda: boolean
   prazoEncomendaDias: number
-  fotos: string[]
-  videos: string[]
   medidasTabela: MedidaPorTamanho[]
   variantes: VariantRow[]
   categoriaId: string | null
@@ -99,8 +100,22 @@ function coresDe(variantes: VariantRow[] | null | undefined) {
   return [...vistas].map(([nome, hex]) => ({ nome, hex }))
 }
 
+/**
+ * O que pode aparecer na vitrine: peça com estoque E com pelo menos uma foto
+ * ou vídeo. Sem mídia, o cartão vira uma tarja listrada que não vende nada e
+ * faz a loja parecer um catálogo de mentira.
+ */
+export function ehVendavel(p: ProdutoResumo): boolean {
+  return p.prontaEntrega && (p.foto !== null || p.temVideo)
+}
+
+export function apenasVendaveis(lista: ProdutoResumo[]): ProdutoResumo[] {
+  return lista.filter(ehVendavel)
+}
+
 export function paraResumo(p: LinhaProduto): ProdutoResumo {
   const fotos = fotosDe(p.fotos)
+  const videos = fotosDe(p.videos)
   const estoque = (p.variants ?? []).reduce((s, v) => s + v.estoque, 0)
   return {
     id: p.id,
@@ -112,6 +127,9 @@ export function paraResumo(p: LinhaProduto): ProdutoResumo {
     selo: p.selo,
     cores: coresDe(p.variants),
     foto: fotos[0] ?? null,
+    fotos,
+    videos,
+    temVideo: videos.length > 0,
     estoque,
     prontaEntrega: estoque > 0,
     categoriaSlug: p.categories?.slug ?? null,
@@ -129,8 +147,6 @@ function paraDetalhe(p: LinhaProduto): ProdutoDetalhe {
     fornecedor: p.fornecedor,
     aceitaEncomenda: p.aceita_encomenda,
     prazoEncomendaDias: p.prazo_encomenda_dias,
-    fotos: fotosDe(p.fotos),
-    videos: fotosDe(p.videos),
     medidasTabela: medidasDe(p.medidas_tabela),
     variantes: [...(p.variants ?? [])].sort(
       (a, b) => a.ordem - b.ordem || a.cor_nome.localeCompare(b.cor_nome),
@@ -200,12 +216,19 @@ export const getCategoriesWithCounts = cache(async (): Promise<CategoriaComConta
   const supabase = await createClient()
   const [{ data: cats }, { data: prods }] = await Promise.all([
     supabase.from('categories').select('*').eq('ativo', true).order('ordem', { ascending: true }),
-    supabase.from('products').select('category_id').eq('status', 'ativo'),
+    supabase
+      .from('products')
+      .select(`${CAMPOS_PRODUTO}, categories(slug, nome), variants(*)`)
+      .eq('status', 'ativo'),
   ])
 
+  // A contagem tem que usar o MESMO critério da vitrine: prometer 9 vestidos
+  // e entregar uma grade vazia é pior do que mostrar 1.
   const contagem = new Map<string, number>()
-  for (const p of prods ?? []) {
-    if (p.category_id) contagem.set(p.category_id, (contagem.get(p.category_id) ?? 0) + 1)
+  for (const linha of (prods ?? []) as unknown as LinhaProduto[]) {
+    if (!linha.category_id) continue
+    if (!ehVendavel(paraResumo(linha))) continue
+    contagem.set(linha.category_id, (contagem.get(linha.category_id) ?? 0) + 1)
   }
   return (cats ?? []).map((c) => ({ ...c, contagem: contagem.get(c.id) ?? 0 }))
 })
@@ -251,7 +274,7 @@ export const getDestaques = cache(async (limite = 4): Promise<ProdutoResumo[]> =
     .eq('destaque', true)
     .order('criado_em', { ascending: false })
     .limit(limite)
-  return ((data ?? []) as unknown as LinhaProduto[]).map(paraResumo)
+  return apenasVendaveis(((data ?? []) as unknown as LinhaProduto[]).map(paraResumo))
 })
 
 export type Ordenacao = 'relevancia' | 'menor-preco' | 'maior-preco' | 'novidades'
@@ -274,7 +297,7 @@ export const getProdutosDaCategoria = cache(
     else q = q.order('destaque', { ascending: false }).order('criado_em', { ascending: false })
 
     const { data } = await q
-    return ((data ?? []) as unknown as LinhaProduto[]).map(paraResumo)
+    return apenasVendaveis(((data ?? []) as unknown as LinhaProduto[]).map(paraResumo))
   },
 )
 
@@ -315,7 +338,7 @@ export const getCombinaCom = cache(
       .neq('id', excluirId)
     if (categoriaId) q = q.neq('category_id', categoriaId)
     const { data } = await q.order('destaque', { ascending: false }).limit(limite)
-    return ((data ?? []) as unknown as LinhaProduto[]).map(paraResumo)
+    return apenasVendaveis(((data ?? []) as unknown as LinhaProduto[]).map(paraResumo))
   },
 )
 
@@ -330,7 +353,7 @@ export async function buscarProdutos(termo: string, limite = 24): Promise<Produt
     .eq('status', 'ativo')
     .or(`nome.ilike.${padrao},descricao.ilike.${padrao},tecido.ilike.${padrao},ref.ilike.${padrao}`)
     .limit(limite)
-  return ((data ?? []) as unknown as LinhaProduto[]).map(paraResumo)
+  return apenasVendaveis(((data ?? []) as unknown as LinhaProduto[]).map(paraResumo))
 }
 
 /** Todos os produtos ativos — usado pela grade "Ver tudo". */
@@ -347,7 +370,7 @@ export const getTodosProdutos = cache(async (ordenacao: Ordenacao = 'relevancia'
   else q = q.order('destaque', { ascending: false }).order('criado_em', { ascending: false })
 
   const { data } = await q
-  return ((data ?? []) as unknown as LinhaProduto[]).map(paraResumo)
+  return apenasVendaveis(((data ?? []) as unknown as LinhaProduto[]).map(paraResumo))
 })
 
 /* ------------------------------------------------------------------ *

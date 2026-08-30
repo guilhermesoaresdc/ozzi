@@ -2,6 +2,7 @@
 
 import { useId, useRef, useState } from 'react'
 import { Placeholder } from '@/components/ui/Placeholder'
+import { VideoOzzi } from '@/components/loja/VideoOzzi'
 import {
   aceitaDoTipo,
   ehVideo,
@@ -120,14 +121,7 @@ export function UploadMidia({
         {valor.map((item, i) => (
           <figure key={item} className="flex min-w-0 flex-col gap-[6px]">
             {ehVideo(item) ? (
-              <video
-                src={item}
-                muted
-                playsInline
-                preload="metadata"
-                controls
-                style={{ width: '100%', aspectRatio: ratio, objectFit: 'cover', background: '#E9E3D9' }}
-              />
+              <VideoOzzi src={item} alt={`Vídeo ${i + 1}`} ratio={ratio} autoPlay={false} />
             ) : (
               <Placeholder ratio={ratio} densidade="denso" sizes="120px" src={item} alt={`${singular} ${i + 1}`} />
             )}

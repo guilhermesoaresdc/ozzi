@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Placeholder } from '@/components/ui/Placeholder'
+import { MidiaCard } from '@/components/loja/MidiaCard'
 import { brl } from '@/lib/format'
 import { valorParcela } from '@/lib/pricing'
 import type { ProdutoResumo } from '@/lib/queries'
@@ -24,18 +24,18 @@ export function ProductCard({
 
   return (
     <Link href={`/produto/${produto.slug}`} className="group block">
-      <Placeholder
-        label={`produto · ${produto.nome.toLowerCase()} · 520×690`}
-        src={produto.foto}
-        alt={produto.nome}
-        ratio="3/4"
-        sizes={sizes}
-        priority={priority}
-        className="transition-[filter] group-hover:brightness-[.965]"
-      >
+      <div className="relative">
+        <MidiaCard
+          fotos={produto.fotos}
+          videos={produto.videos}
+          nome={produto.nome}
+          legenda={`produto · ${produto.nome.toLowerCase()} · 520×690`}
+          sizes={sizes}
+          priority={priority}
+        />
         {produto.selo && (
           <span
-            className="absolute uppercase"
+            className="pointer-events-none absolute uppercase"
             style={{
               top: 13,
               left: 13,
@@ -49,7 +49,7 @@ export function ProductCard({
             {produto.selo}
           </span>
         )}
-      </Placeholder>
+      </div>
 
       <div className="flex flex-col gap-[5px] pt-[13px] pr-[2px] pl-[2px]">
         <span style={{ fontSize: 14.5 }}>{produto.nome}</span>

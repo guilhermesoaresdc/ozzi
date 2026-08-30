@@ -31,6 +31,9 @@ export async function getPecasSobEncomenda(): Promise<PecaEncomenda[]> {
   return linhas
     .filter((p) => (p.variants?.length ?? 0) > 0 && (p.variants ?? []).every((v) => v.estoque <= 0))
     .map((p) => ({ ...paraResumo(p), prazoDias: p.prazo_encomenda_dias }))
+    // Sem foto nem vídeo a peça não se vende, mesmo sob encomenda: aqui o
+    // critério de estoque é o oposto do da vitrine, mas o de mídia é o mesmo.
+    .filter((p) => p.foto !== null || p.temVideo)
 }
 
 export async function ListaEncomenda() {
