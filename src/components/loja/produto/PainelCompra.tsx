@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react'
 import { Acordeao, type ItemAcordeao } from '@/components/loja/produto/Acordeao'
+import { ProvadorVirtual } from '@/components/loja/produto/ProvadorVirtual'
 import { AcoesCompra } from '@/components/loja/produto/AcoesCompra'
 import { SeletorCor } from '@/components/loja/produto/SeletorCor'
 import { SeletorTamanho } from '@/components/loja/produto/SeletorTamanho'
@@ -187,6 +188,12 @@ export function PainelCompra({
         aberto={aberto}
         aoAlternar={(i) => setAberto((atual) => (atual === i ? -1 : i))}
         containerRef={refAcordeao}
+      />
+
+      <ProvadorVirtual
+        productId={produto.id}
+        variantId={varianteAtual?.variantId ?? null}
+        nomePeca={produto.nome}
       />
     </div>
   )

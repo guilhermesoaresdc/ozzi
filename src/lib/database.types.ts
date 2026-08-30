@@ -15,6 +15,7 @@ export type OrderStatus =
   | 'cancelado'
 export type DeliveryMethod = 'retirada' | 'motoboy' | 'pac' | 'sedex'
 export type PaymentMethod = 'pix' | 'cartao' | 'whatsapp' | 'na_retirada'
+export type ProvaStatus = 'processando' | 'pronta' | 'erro'
 export type SizeCode = 'P' | 'M' | 'G' | 'GG' | 'U'
 export type BannerType = 'home_hero' | 'categoria' | 'faixa_colecao'
 export type CampaignStatus = 'rascunho' | 'agendada' | 'enviada' | 'ativa'
@@ -260,6 +261,19 @@ export type EmailAutomationRow = {
   config: Json
 }
 
+export type ProvaRow = {
+  id: string
+  product_id: string | null
+  variant_id: string | null
+  customer_id: string | null
+  visitante_id: string | null
+  foto_pessoa: string
+  imagem_gerada: string | null
+  status: ProvaStatus
+  erro: string | null
+  criado_em: string
+}
+
 export type StockAlertRow = {
   id: string
   variant_id: string | null
@@ -316,6 +330,14 @@ export type Database = {
       email_lists: Table<EmailListRow>
       email_campaigns: Table<EmailCampaignRow, [FK<'email_campaigns_lista_id_fkey', 'lista_id', 'email_lists'>]>
       email_automations: Table<EmailAutomationRow>
+      provas: Table<
+        ProvaRow,
+        [
+          FK<'provas_product_id_fkey', 'product_id', 'products'>,
+          FK<'provas_variant_id_fkey', 'variant_id', 'variants'>,
+          FK<'provas_customer_id_fkey', 'customer_id', 'customers'>,
+        ]
+      >
       stock_alerts: Table<
         StockAlertRow,
         [
@@ -344,6 +366,10 @@ export type Database = {
       }
       pedido_publico: {
         Args: { p_codigo: string; p_email: string }
+        Returns: Json
+      }
+      prova_cota: {
+        Args: { p_visitante?: string | null }
         Returns: Json
       }
     }
