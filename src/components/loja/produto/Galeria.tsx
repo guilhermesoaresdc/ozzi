@@ -15,7 +15,7 @@ const TOMADAS = [
   { legenda: 'look completo · 900×1200', alt: 'look completo' },
 ]
 
-const ZOOM = 2.1
+const ZOOM = 1.6
 
 /**
  * Galeria da peça: um palco de altura limitada e uma trilha de miniaturas.
@@ -100,8 +100,8 @@ export function Galeria({
             {midias.map((m, i) => (
               <li
                 key={m.src}
-                className="aspect-[3/4] w-full shrink-0 snap-center lg:aspect-auto lg:h-[min(74vh,780px)]"
-                style={{ scrollSnapAlign: 'center', background: '#E9E3D9' }}
+                className="aspect-[9/16] w-full shrink-0 snap-center lg:aspect-auto lg:h-[min(78vh,860px)]"
+                style={{ scrollSnapAlign: 'center', background: '#EFE9DF' }}
               >
                 {ehVideo(m.src) ? (
                   <VideoOzzi
@@ -136,7 +136,7 @@ export function Galeria({
                       fill
                       sizes="(max-width: 1024px) 100vw, 45vw"
                       priority={i === 0}
-                      className="object-cover"
+                      className="object-contain"
                       style={{
                         transform: ampliando && i === indice ? `scale(${ZOOM})` : 'scale(1)',
                         transformOrigin: `${origem.x}% ${origem.y}%`,
@@ -189,7 +189,7 @@ export function Galeria({
                 padding: '6px 9px',
               }}
             >
-              Passe para ampliar · clique para tela cheia
+              Clique para ver em tela cheia
             </span>
           )}
         </div>

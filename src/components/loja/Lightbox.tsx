@@ -141,8 +141,8 @@ export function Lightbox({
           }}
         >
           {video ? (
-            <div className="flex h-full max-h-full items-center justify-center" style={{ width: 'min(100%, 62vh)' }}>
-              <VideoOzzi key={atual.src} src={atual.src} alt={atual.alt} cinema />
+            <div className="h-full w-full">
+              <VideoOzzi key={atual.src} src={atual.src} alt={atual.alt} cinema fundo="transparent" />
             </div>
           ) : (
             <button
@@ -160,20 +160,21 @@ export function Lightbox({
               className="relative flex h-full max-h-full w-full items-center justify-center overflow-hidden"
               style={{ cursor: ampliada ? 'zoom-out' : 'zoom-in' }}
             >
+              {/* fill + contain mostra a foto inteira, seja 9:16, 3:4 ou quadrada:
+                  nada de dimensão fixa impondo um recorte que a foto não tem. */}
               <Image
                 key={atual.src}
                 src={atual.src}
                 alt={atual.alt}
-                width={1400}
-                height={1860}
+                fill
+                sizes="100vw"
                 unoptimized={atual.src.startsWith('blob:') || atual.src.includes('/storage/v1/object/sign/')}
                 priority
-                className="max-h-full w-auto object-contain"
+                className="object-contain"
                 style={{
-                  transform: ampliada ? 'scale(2)' : 'scale(1)',
+                  transform: ampliada ? 'scale(2.2)' : 'scale(1)',
                   transformOrigin: `${origem.x}% ${origem.y}%`,
                   transition: ampliada ? 'transform 260ms ease' : 'transform 320ms ease',
-                  maxHeight: '100%',
                 }}
               />
             </button>
