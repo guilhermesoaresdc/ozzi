@@ -239,7 +239,7 @@ export type StoreSettingsRow = {
   email: string
   promo_bar_ativa: boolean
   frete_gratis_acima: number
-  desconto_pix: number
+  desconto_avista: number
   parcelas_max: number
 }
 

@@ -33,7 +33,7 @@ export default async function SacolaPage() {
           preco: Number(m.preco),
         }))}
         freteGratisAcima={Number(config.frete_gratis_acima)}
-        taxaPix={Number(config.desconto_pix)}
+        taxaAVista={Number(config.desconto_avista)}
         parcelas={Number(config.parcelas_max)}
       />
     </div>

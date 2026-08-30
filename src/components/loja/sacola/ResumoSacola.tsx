@@ -22,7 +22,7 @@ export function ResumoSacola({
   metodos,
   metodoEntrega,
   nomeEntrega,
-  taxaPix,
+  taxaAVista,
   freteGratisAcima,
   precos,
   aoEscolherEntrega,
@@ -31,7 +31,7 @@ export function ResumoSacola({
   metodos: MetodoEntrega[]
   metodoEntrega: DeliveryMethod
   nomeEntrega: string
-  taxaPix: number
+  taxaAVista: number
   freteGratisAcima: number
   precos: Partial<Record<DeliveryMethod, number>>
   aoEscolherEntrega: (chave: DeliveryMethod) => void
@@ -66,7 +66,7 @@ export function ResumoSacola({
         )}
         {totais.desconto > 0 && (
           <Linha
-            rotulo={`Desconto PIX (${pct(taxaPix * 100)})`}
+            rotulo={`Desconto à vista (${pct(taxaAVista * 100)})`}
             valor={`−${brl(totais.desconto)}`}
             cor="#8A6A4F"
           />
@@ -75,7 +75,7 @@ export function ResumoSacola({
 
       <div className="flex items-baseline justify-between" style={{ gap: 14, padding: '18px 0 4px' }}>
         <span className="uppercase" style={{ fontSize: 11.5, letterSpacing: '.14em' }}>
-          Total no PIX
+          Total à vista
         </span>
         <span className="font-display" style={{ fontSize: 30, lineHeight: 1 }}>
           {brl(totais.total)}

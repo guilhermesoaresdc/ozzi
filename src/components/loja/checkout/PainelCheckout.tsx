@@ -62,7 +62,7 @@ export function PainelCheckout({
   opcoesPagamento,
   entregaInicial,
   freteGratisAcima,
-  taxaPix,
+  taxaAVista,
   parcelasMax,
   whatsapp,
 }: {
@@ -70,7 +70,7 @@ export function PainelCheckout({
   opcoesPagamento: PaymentOptionRow[]
   entregaInicial: DeliveryMethod
   freteGratisAcima: number
-  taxaPix: number
+  taxaAVista: number
   parcelasMax: number
   whatsapp: string
 }) {
@@ -114,10 +114,10 @@ export function PainelCheckout({
         metodoPagamento,
         precosFrete: precos,
         freteGratisAcima,
-        taxaPix,
+        taxaAVista,
         parcelas: parcelasMax,
       }),
-    [subtotal, metodoEntrega, metodoPagamento, precos, freteGratisAcima, taxaPix, parcelasMax],
+    [subtotal, metodoEntrega, metodoPagamento, precos, freteGratisAcima, taxaAVista, parcelasMax],
   )
 
   const rotuloEntrega =
@@ -440,7 +440,7 @@ export function PainelCheckout({
           totais={totais}
           metodoPagamento={metodoPagamento}
           rotuloEntrega={rotuloEntrega}
-          taxaPix={taxaPix}
+          taxaAVista={taxaAVista}
           enviando={enviando}
           hrefWhatsapp={hrefWhatsapp}
         />

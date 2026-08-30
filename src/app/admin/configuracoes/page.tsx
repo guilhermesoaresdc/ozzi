@@ -29,7 +29,7 @@ export default async function ConfiguracoesPage() {
           <CartaoEntrega entregas={entregas} freteGratisAcima={Number(settings.frete_gratis_acima)} />
           <CartaoPagamentos
             pagamentos={pagamentos}
-            descontoPix={Number(settings.desconto_pix)}
+            descontoAVista={Number(settings.desconto_avista)}
             parcelasMax={settings.parcelas_max}
           />
           <CartaoDadosLoja settings={settings} />

@@ -43,7 +43,7 @@ export default async function CheckoutPage({ searchParams }: { searchParams: Bus
         opcoesPagamento={opcoesPagamento}
         entregaInicial={entregaInicial}
         freteGratisAcima={Number(settings.frete_gratis_acima)}
-        taxaPix={Number(settings.desconto_pix)}
+        taxaAVista={Number(settings.desconto_avista)}
         parcelasMax={settings.parcelas_max}
         whatsapp={WHATSAPP}
       />

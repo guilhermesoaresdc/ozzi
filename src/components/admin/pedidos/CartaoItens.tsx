@@ -2,17 +2,17 @@ import { Card } from '@/components/admin/Card'
 import { Placeholder } from '@/components/ui/Placeholder'
 import type { PedidoCompleto } from '@/lib/admin-queries'
 import { brl } from '@/lib/format'
-import { rotuloFrete } from '@/lib/pricing'
+import { ehAVista, rotuloFrete } from '@/lib/pricing'
 import { ENTREGA, STATUS_PEDIDO } from '@/lib/status'
 
 /** Rótulo da linha de desconto: cupom, PIX ou o genérico. */
-function rotuloDesconto(pedido: PedidoCompleto, taxaPix: number): string {
+function rotuloDesconto(pedido: PedidoCompleto, taxaAVista: number): string {
   if (pedido.cupom) return `Desconto · cupom ${pedido.cupom}`
-  if (pedido.metodo_pagamento === 'pix') return `Desconto PIX (${Math.round(taxaPix * 100)}%)`
+  if (ehAVista(pedido.metodo_pagamento)) return `Desconto à vista (${Math.round(taxaAVista * 100)}%)`
   return 'Desconto'
 }
 
-export function CartaoItens({ pedido, taxaPix }: { pedido: PedidoCompleto; taxaPix: number }) {
+export function CartaoItens({ pedido, taxaAVista }: { pedido: PedidoCompleto; taxaAVista: number }) {
   const itens = pedido.order_items ?? []
   const status = STATUS_PEDIDO[pedido.status]
   const desconto = Number(pedido.desconto)
@@ -75,7 +75,7 @@ export function CartaoItens({ pedido, taxaPix }: { pedido: PedidoCompleto; taxaP
         </div>
         {desconto > 0 && (
           <div className="flex justify-between gap-5">
-            <span>{rotuloDesconto(pedido, taxaPix)}</span>
+            <span>{rotuloDesconto(pedido, taxaAVista)}</span>
             <span style={{ color: '#8A6A4F' }}>− {brl(desconto)}</span>
           </div>
         )}

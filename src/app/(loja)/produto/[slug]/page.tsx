@@ -9,7 +9,7 @@ import { montarGrade, selecaoInicial, tamanhoUnico } from '@/components/loja/pro
 import type { ItemAcordeao } from '@/components/loja/produto/Acordeao'
 import { getProduto, getSettings } from '@/lib/queries'
 import { brl, num, pct } from '@/lib/format'
-import { precoPix, valorParcela } from '@/lib/pricing'
+import { precoAVista, valorParcela } from '@/lib/pricing'
 import { WHATSAPP } from '@/lib/supabase/config'
 
 type Props = { params: Promise<{ slug: string }> }
@@ -47,7 +47,7 @@ export default async function ProdutoPage({ params }: Props) {
   const [produto, config] = await Promise.all([getProduto(slug), getSettings()])
   if (!produto) notFound()
 
-  const taxaPix = Number(config.desconto_pix)
+  const taxaAVista = Number(config.desconto_avista)
   const parcelas = Number(config.parcelas_max)
   const freteGratis = Number(config.frete_gratis_acima)
 
@@ -123,8 +123,8 @@ export default async function ProdutoPage({ params }: Props) {
           grade={grade}
           inicial={inicial}
           chapeu={chapeu}
-          precoNoPix={precoPix(produto.preco, taxaPix)}
-          rotuloDescontoPix={pct(taxaPix * 100)}
+          precoAVista={precoAVista(produto.preco, taxaAVista)}
+          rotuloDescontoAVista={pct(taxaAVista * 100)}
           parcelas={parcelas}
           parcela={valorParcela(produto.preco, parcelas)}
           hrefWhatsapp={hrefWhatsapp}

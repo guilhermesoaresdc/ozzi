@@ -27,25 +27,25 @@ function assinar(pix: string, parcelas: string, linhas: Linha[]): string {
 
 export function CartaoPagamentos({
   pagamentos,
-  descontoPix,
+  descontoAVista,
   parcelasMax,
 }: {
   pagamentos: PaymentOptionRow[]
   /** Fração guardada em store_settings (0,05 = 5%). */
-  descontoPix: number
+  descontoAVista: number
   parcelasMax: number
 }) {
-  const doBanco = assinar(emPorcento(descontoPix), String(parcelasMax), paraLinhas(pagamentos))
+  const doBanco = assinar(emPorcento(descontoAVista), String(parcelasMax), paraLinhas(pagamentos))
 
   const [origem, setOrigem] = useState(doBanco)
   const [linhas, setLinhas] = useState<Linha[]>(() => paraLinhas(pagamentos))
-  const [pix, setPix] = useState(() => emPorcento(descontoPix))
+  const [pix, setPix] = useState(() => emPorcento(descontoAVista))
   const [parcelas, setParcelas] = useState(() => String(parcelasMax))
 
   if (doBanco !== origem) {
     setOrigem(doBanco)
     setLinhas(paraLinhas(pagamentos))
-    setPix(emPorcento(descontoPix))
+    setPix(emPorcento(descontoAVista))
     setParcelas(String(parcelasMax))
   }
 
@@ -91,7 +91,7 @@ export function CartaoPagamentos({
             >
               <input
                 id={`${base}-pix`}
-                name="desconto_pix"
+                name="desconto_avista"
                 className="oz-input"
                 style={CAMPO}
                 type="text"

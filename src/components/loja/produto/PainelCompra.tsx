@@ -34,8 +34,8 @@ export function PainelCompra({
   grade,
   inicial,
   chapeu,
-  precoNoPix,
-  rotuloDescontoPix,
+  precoAVista,
+  rotuloDescontoAVista,
   parcelas,
   parcela,
   hrefWhatsapp,
@@ -46,8 +46,8 @@ export function PainelCompra({
   grade: CorOpcao[]
   inicial: Selecao
   chapeu: string
-  precoNoPix: number
-  rotuloDescontoPix: string
+  precoAVista: number
+  rotuloDescontoAVista: string
   parcelas: number
   parcela: number
   hrefWhatsapp: string
@@ -144,7 +144,7 @@ export function PainelCompra({
         )}
       </div>
       <p style={{ fontSize: 13.5, color: '#5C574D', margin: '0 0 4px' }}>
-        <strong style={{ fontWeight: 500 }}>{brl(precoNoPix)}</strong> no PIX ({rotuloDescontoPix} de
+        <strong style={{ fontWeight: 500 }}>{brl(precoAVista)}</strong> no PIX ({rotuloDescontoAVista} de
         desconto)
       </p>
       <p style={{ fontSize: 13.5, color: '#8A8375', margin: '0 0 26px' }}>

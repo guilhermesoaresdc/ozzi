@@ -109,7 +109,7 @@ export default async function ConfirmacaoPage({ searchParams }: { searchParams: 
           pedido={pedido}
           email={email}
           whatsapp={WHATSAPP}
-          taxaPix={Number(settings.desconto_pix)}
+          taxaAVista={Number(settings.desconto_avista)}
         />
       ) : (
         <PedidoNaoEncontrado whatsapp={WHATSAPP} />

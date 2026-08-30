@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Placeholder } from '@/components/ui/Placeholder'
 import { brl, dataLonga, hora, rotuloDia } from '@/lib/format'
-import { rotuloFrete } from '@/lib/pricing'
+import { ehAVista, rotuloFrete } from '@/lib/pricing'
 import { ENTREGA, PAGAMENTO, STATUS_PEDIDO } from '@/lib/status'
 import { linkWhatsapp } from '@/components/loja/conta/Estados'
 import {
@@ -22,9 +22,9 @@ function Dado({ rotulo, valor }: { rotulo: string; valor: string }) {
   )
 }
 
-function rotuloDesconto(pedido: PedidoDaConta, taxaPix: number): string {
+function rotuloDesconto(pedido: PedidoDaConta, taxaAVista: number): string {
   if (pedido.cupom) return `Desconto · cupom ${pedido.cupom}`
-  if (pedido.metodoPagamento === 'pix') return `Desconto PIX (${Math.round(taxaPix * 100)}%)`
+  if (ehAVista(pedido.metodoPagamento)) return `Desconto à vista (${Math.round(taxaAVista * 100)}%)`
   return 'Desconto'
 }
 
@@ -32,7 +32,7 @@ function rotuloDesconto(pedido: PedidoDaConta, taxaPix: number): string {
  * O pedido visto pela cliente (handoff §5.8): itens, totais e histórico na
  * mesma linguagem do card da lista. Nenhuma ação de administração aqui.
  */
-export function DetalhePedido({ pedido, taxaPix }: { pedido: PedidoDaConta; taxaPix: number }) {
+export function DetalhePedido({ pedido, taxaAVista }: { pedido: PedidoDaConta; taxaAVista: number }) {
   const status = STATUS_PEDIDO[pedido.status]
   const endereco = enderecoEmLinha(pedido.endereco)
   const totalRotulo = pedido.status === 'aguardando_pagamento' ? 'Total a pagar' : 'Total'
@@ -131,7 +131,7 @@ export function DetalhePedido({ pedido, taxaPix }: { pedido: PedidoDaConta; taxa
               </div>
               {pedido.desconto > 0 && (
                 <div className="flex justify-between" style={{ gap: 18 }}>
-                  <span>{rotuloDesconto(pedido, taxaPix)}</span>
+                  <span>{rotuloDesconto(pedido, taxaAVista)}</span>
                   <span style={{ color: '#8A6A4F' }}>− {brl(pedido.desconto)}</span>
                 </div>
               )}

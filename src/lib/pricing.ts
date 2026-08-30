@@ -3,9 +3,9 @@ import type { DeliveryMethod, PaymentMethod } from '@/lib/database.types'
 
 /** Regras de negócio da loja (handoff §10). Os valores default espelham o seed. */
 export const REGRAS = {
-  descontoPix: 0.05,
+  descontoAVista: 0.10,
   freteGratisAcima: 249,
-  parcelasMax: 6,
+  parcelasMax: 2,
   motoboy: 12,
   pac: 24.9,
   sedex: 39.9,
@@ -33,7 +33,7 @@ export function rotuloFrete(valor: number): string {
   return valor === 0 ? 'Grátis' : brl(valor)
 }
 
-export function descontoPix(subtotal: number, taxa: number = REGRAS.descontoPix): number {
+export function descontoAVista(subtotal: number, taxa: number = REGRAS.descontoAVista): number {
   return arredonda(subtotal * taxa)
 }
 
@@ -54,7 +54,7 @@ export function calcularTotais(opts: {
   metodoPagamento?: PaymentMethod
   precosFrete?: Partial<Record<DeliveryMethod, number>>
   freteGratisAcima?: number
-  taxaPix?: number
+  taxaAVista?: number
   parcelas?: number
   descontoCupom?: number
 }): Totais {
@@ -64,15 +64,16 @@ export function calcularTotais(opts: {
     metodoPagamento = 'pix',
     precosFrete = {},
     freteGratisAcima = REGRAS.freteGratisAcima,
-    taxaPix = REGRAS.descontoPix,
+    taxaAVista = REGRAS.descontoAVista,
     parcelas = REGRAS.parcelasMax,
     descontoCupom = 0,
   } = opts
 
   const frete = calcularFrete(metodoEntrega, subtotal, precosFrete, freteGratisAcima)
-  // O desconto de 5% incide só no subtotal e só quando o pagamento é PIX (handoff §7)
-  const pix = metodoPagamento === 'pix' ? descontoPix(subtotal, taxaPix) : 0
-  const desconto = arredonda(pix + descontoCupom)
+  // O desconto à vista incide só no subtotal. Vale para PIX e para dinheiro
+  // na retirada — cartão fica de fora porque a maquininha cobra taxa.
+  const avista = ehAVista(metodoPagamento) ? descontoAVista(subtotal, taxaAVista) : 0
+  const desconto = arredonda(avista + descontoCupom)
   const total = arredonda(Math.max(0, subtotal + frete - desconto))
   const totalCartao = arredonda(Math.max(0, subtotal + frete - descontoCupom))
 
@@ -87,8 +88,13 @@ export function calcularTotais(opts: {
   }
 }
 
-/** Preço no PIX de uma peça isolada — a linha da página de produto. */
-export function precoPix(preco: number, taxa: number = REGRAS.descontoPix): number {
+/** Formas que contam como pagamento à vista. */
+export function ehAVista(metodo: PaymentMethod): boolean {
+  return metodo === 'pix' || metodo === 'na_retirada'
+}
+
+/** Preço à vista de uma peça isolada — a linha da página de produto. */
+export function precoAVista(preco: number, taxa: number = REGRAS.descontoAVista): number {
   return arredonda(preco * (1 - taxa))
 }
 

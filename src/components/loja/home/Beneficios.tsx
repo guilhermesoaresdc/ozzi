@@ -12,8 +12,8 @@ const BENEFICIOS = [
   },
   {
     numero: 'III',
-    titulo: 'PIX com desconto',
-    texto: '5% off à vista no PIX ou até 6x sem juros no cartão.',
+    titulo: 'À vista com desconto',
+    texto: '10% off à vista no PIX ou dinheiro, ou até 2x sem juros no cartão.',
   },
   {
     numero: 'IV',

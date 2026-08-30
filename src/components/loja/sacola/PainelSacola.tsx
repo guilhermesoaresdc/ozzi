@@ -41,12 +41,12 @@ function gravarEntrega(metodo: DeliveryMethod) {
 export function PainelSacola({
   metodos,
   freteGratisAcima,
-  taxaPix,
+  taxaAVista,
   parcelas,
 }: {
   metodos: MetodoEntrega[]
   freteGratisAcima: number
-  taxaPix: number
+  taxaAVista: number
   parcelas: number
 }) {
   const { itens, carregado, subtotal, definirQuantidade, remover } = useCart()
@@ -80,7 +80,7 @@ export function PainelSacola({
     metodoEntrega,
     precosFrete: precos,
     freteGratisAcima,
-    taxaPix,
+    taxaAVista,
     parcelas,
   })
 
@@ -143,7 +143,7 @@ export function PainelSacola({
             metodos={metodos}
             metodoEntrega={metodoEntrega}
             nomeEntrega={nomeEntrega}
-            taxaPix={taxaPix}
+            taxaAVista={taxaAVista}
             freteGratisAcima={freteGratisAcima}
             precos={precos}
             aoEscolherEntrega={escolherEntrega}

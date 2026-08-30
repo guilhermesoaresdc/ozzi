@@ -15,7 +15,7 @@ import {
 export const metadata: Metadata = {
   title: { absolute: 'Ozzi Moda Feminina · Pronta entrega em Várzea Alegre - CE' },
   description:
-    'Vestidos, blusas, conjuntos e acessórios em pronta entrega. Retirada no Centro de Várzea Alegre em até 2 horas, PIX com 5% de desconto e Correios para todo o Brasil.',
+    'Vestidos, blusas, conjuntos e acessórios em pronta entrega. Retirada no Centro de Várzea Alegre em até 2 horas, PIX ou dinheiro com 10% de desconto e Correios para todo o Brasil.',
   alternates: { canonical: '/' },
 }
 

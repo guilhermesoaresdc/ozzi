@@ -49,7 +49,7 @@ export default async function PedidoPage({ params }: { params: Params }) {
 
         <div className="grid items-start gap-[22px] lg:grid-cols-3">
           <div className="flex min-w-0 flex-col gap-[22px] lg:col-span-2">
-            <CartaoItens pedido={pedido} taxaPix={Number(settings.desconto_pix)} />
+            <CartaoItens pedido={pedido} taxaAVista={Number(settings.desconto_avista)} />
             <CartaoHistorico eventos={pedido.order_events ?? []} />
           </div>
 

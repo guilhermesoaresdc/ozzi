@@ -176,7 +176,7 @@ export const getSettings = cache(async (): Promise<StoreSettingsRow> => {
       email: 'contato@ozzi.com.br',
       promo_bar_ativa: true,
       frete_gratis_acima: 249,
-      desconto_pix: 0.05,
+      desconto_avista: 0.05,
       parcelas_max: 6,
     }
   )

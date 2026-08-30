@@ -22,5 +22,5 @@ export default async function PedidoDaContaPage({ params }: { params: Params }) 
 
   if (!pedido) return <PedidoNaoAchado />
 
-  return <DetalhePedido pedido={pedido} taxaPix={Number(config.desconto_pix)} />
+  return <DetalhePedido pedido={pedido} taxaAVista={Number(config.desconto_avista)} />
 }

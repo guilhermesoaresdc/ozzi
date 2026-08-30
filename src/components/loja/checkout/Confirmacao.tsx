@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Placeholder } from '@/components/ui/Placeholder'
 import type { DeliveryMethod, OrderStatus, PaymentMethod } from '@/lib/database.types'
 import { brl, dataCurta, primeiroNome } from '@/lib/format'
-import { rotuloFrete } from '@/lib/pricing'
+import { ehAVista, rotuloFrete } from '@/lib/pricing'
 import { ENTREGA, PAGAMENTO, STATUS_PEDIDO } from '@/lib/status'
 
 export interface ItemConfirmado {
@@ -36,7 +36,7 @@ const PROXIMO_PASSO: Record<PaymentMethod, { titulo: string; texto: string }> = 
   cartao: {
     titulo: 'O link do cartão chega no seu WhatsApp',
     texto:
-      'Uma vendedora envia o link seguro para você pagar em até 6x sem juros. As peças ficam reservadas até lá.',
+      'Uma vendedora envia o link seguro para você pagar. As peças ficam reservadas até lá.',
   },
   whatsapp: {
     titulo: 'Combine o pagamento com a loja',
@@ -66,8 +66,8 @@ function Linha({ rotulo, valor }: { rotulo: string; valor: string }) {
   )
 }
 
-function ResumoConfirmado({ pedido, taxaPix }: { pedido: PedidoConfirmado; taxaPix: number }) {
-  const noPix = pedido.metodoPagamento === 'pix'
+function ResumoConfirmado({ pedido, taxaAVista }: { pedido: PedidoConfirmado; taxaAVista: number }) {
+  const noPix = ehAVista(pedido.metodoPagamento)
   const rotuloTotal = pedido.status === 'aguardando_pagamento' ? 'Total a pagar' : 'Total'
 
   return (
@@ -116,7 +116,7 @@ function ResumoConfirmado({ pedido, taxaPix }: { pedido: PedidoConfirmado; taxaP
         </div>
         {pedido.desconto > 0 && (
           <div className="flex justify-between" style={{ gap: 18 }}>
-            <span>{noPix ? `Desconto PIX (${Math.round(taxaPix * 100)}%)` : 'Desconto'}</span>
+            <span>{noPix ? `Desconto à vista (${Math.round(taxaAVista * 100)}%)` : 'Desconto'}</span>
             <span style={{ color: '#8A6A4F' }}>− {brl(pedido.desconto)}</span>
           </div>
         )}
@@ -145,12 +145,12 @@ export function Confirmacao({
   pedido,
   email,
   whatsapp,
-  taxaPix,
+  taxaAVista,
 }: {
   pedido: PedidoConfirmado
   email: string
   whatsapp: string
-  taxaPix: number
+  taxaAVista: number
 }) {
   const status = STATUS_PEDIDO[pedido.status]
   const passo = PROXIMO_PASSO[pedido.metodoPagamento]
@@ -271,7 +271,7 @@ export function Confirmacao({
           </div>
         </div>
 
-        <ResumoConfirmado pedido={pedido} taxaPix={taxaPix} />
+        <ResumoConfirmado pedido={pedido} taxaAVista={taxaAVista} />
       </div>
     </>
   )

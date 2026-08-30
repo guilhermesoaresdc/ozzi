@@ -2,7 +2,7 @@ import { Placeholder } from '@/components/ui/Placeholder'
 import type { CartItem } from '@/lib/cart'
 import type { PaymentMethod } from '@/lib/database.types'
 import { brl } from '@/lib/format'
-import { rotuloFrete, type Totais } from '@/lib/pricing'
+import { ehAVista, rotuloFrete, type Totais } from '@/lib/pricing'
 
 /**
  * Resumo sticky do checkout (handoff §5.6): miniaturas de 52px, os totais e o
@@ -14,7 +14,7 @@ export function ResumoPedido({
   totais,
   metodoPagamento,
   rotuloEntrega,
-  taxaPix,
+  taxaAVista,
   enviando,
   hrefWhatsapp,
 }: {
@@ -22,11 +22,11 @@ export function ResumoPedido({
   totais: Totais
   metodoPagamento: PaymentMethod
   rotuloEntrega: string
-  taxaPix: number
+  taxaAVista: number
   enviando: boolean
   hrefWhatsapp: string
 }) {
-  const noPix = metodoPagamento === 'pix'
+  const noPix = ehAVista(metodoPagamento)
 
   return (
     <aside
@@ -80,7 +80,7 @@ export function ResumoPedido({
         </div>
         {totais.desconto > 0 && (
           <div className="flex justify-between" style={{ gap: 18 }}>
-            <span>Desconto PIX ({Math.round(taxaPix * 100)}%)</span>
+            <span>Desconto à vista ({Math.round(taxaAVista * 100)}%)</span>
             <span style={{ color: '#8A6A4F' }}>− {brl(totais.desconto)}</span>
           </div>
         )}
@@ -91,7 +91,7 @@ export function ResumoPedido({
         style={{ gap: 18, borderTop: '1px solid #DFD8CB', paddingTop: 16, marginTop: 16 }}
       >
         <span className="uppercase" style={{ fontSize: 11.5, letterSpacing: '.14em' }}>
-          {noPix ? 'Total no PIX' : 'Total'}
+          {noPix ? 'Total à vista' : 'Total'}
         </span>
         <span className="font-display" style={{ fontSize: 30, fontWeight: 300 }}>
           {brl(totais.total)}

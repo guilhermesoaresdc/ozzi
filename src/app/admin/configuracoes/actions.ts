@@ -132,7 +132,7 @@ export async function salvarEntregas(_estado: EstadoAcao, formData: FormData): P
  * ------------------------------------------------------------------ */
 
 const EsquemaPagamentos = z.object({
-  descontoPix: z.string(),
+  descontoAVista: z.string(),
   parcelasMax: z.string(),
   linhas: z
     .array(
@@ -155,13 +155,13 @@ export async function salvarPagamentos(_estado: EstadoAcao, formData: FormData):
   }
 
   const entrada = EsquemaPagamentos.safeParse({
-    descontoPix: texto(formData.get('desconto_pix')),
+    descontoAVista: texto(formData.get('desconto_avista')),
     parcelasMax: texto(formData.get('parcelas_max')),
     linhas: bruto,
   })
   if (!entrada.success) return { erro: entrada.error.issues[0]?.message ?? ERRO_ENTRADA }
 
-  const porcento = paraNumero(entrada.data.descontoPix)
+  const porcento = paraNumero(entrada.data.descontoAVista)
   if (porcento === null || porcento > 50)
     return { erro: 'O desconto do PIX precisa ser um número entre 0 e 50, como 5 ou 7,5.' }
 
@@ -175,7 +175,7 @@ export async function salvarPagamentos(_estado: EstadoAcao, formData: FormData):
   const { error: erroSettings } = await supabase
     .from('store_settings')
     // A coluna guarda a fração (0,05 = 5%); a tela pergunta em porcentagem.
-    .update({ desconto_pix: Math.round(porcento * 100) / 10_000, parcelas_max: parcelas })
+    .update({ desconto_avista: Math.round(porcento * 100) / 10_000, parcelas_max: parcelas })
     .eq('id', true)
   if (erroSettings) return { erro: ERRO_SALVAR }
 

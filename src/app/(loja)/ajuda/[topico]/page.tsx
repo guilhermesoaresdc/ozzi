@@ -158,38 +158,38 @@ const AJUDA = {
 
   pagamento: {
     titulo: 'Formas de pagamento',
-    resumo: 'PIX com 5% de desconto à vista ou até 6x sem juros no cartão.',
+    resumo: '10% de desconto à vista no PIX ou dinheiro, ou até 2x sem juros no cartão.',
     descricao:
-      'Formas de pagamento da Ozzi: PIX com 5% de desconto, cartão em até 6x sem juros, pagamento na retirada e fechamento pelo WhatsApp.',
+      'Formas de pagamento da Ozzi: 10% de desconto à vista no PIX ou dinheiro, cartão em até 2x sem juros e fechamento pelo WhatsApp.',
     secoes: [
       {
         titulo: 'O que aceitamos',
         tabela: {
           cabecalho: ['Forma', 'Vantagem', 'Como funciona'],
           linhas: [
-            ['PIX', '5% de desconto', 'QR Code na próxima tela · aprovação imediata'],
-            ['Cartão de crédito', 'Até 6x sem juros', 'Visa, Master, Elo e Hipercard'],
+            ['PIX', '10% de desconto', 'QR Code na próxima tela · aprovação imediata'],
+            ['Cartão de crédito', 'Até 2x sem juros', 'Visa, Master, Elo e Hipercard'],
             ['Combinar no WhatsApp', 'Atendimento humano', 'Uma vendedora finaliza o pedido com você'],
-            ['Pagar na retirada', 'Sem taxa', 'PIX ou dinheiro na hora de receber a peça'],
+            ['Pagar na retirada', '10% de desconto', 'PIX ou dinheiro na hora de receber a peça'],
           ],
         },
       },
       {
         titulo: 'O desconto do PIX',
         paragrafos: [
-          'Os 5% aparecem no resumo assim que você escolhe o PIX e incidem sobre o valor das peças, não sobre o frete. O código é gerado na tela seguinte à confirmação do pedido e a baixa é imediata.',
+          'Os 10% aparecem no resumo assim que você escolhe PIX ou pagamento na retirada, e incidem sobre o valor das peças, não sobre o frete. O código do PIX é gerado na tela seguinte à confirmação do pedido e a baixa é imediata.',
         ],
       },
       {
         titulo: 'Parcelamento no cartão',
         paragrafos: [
-          'Até 6x sem juros. O valor de cada parcela aparece embaixo do preço, em toda a vitrine, e o pedido entra na separação assim que o pagamento é aprovado.',
+          'Até 2x sem juros. O valor de cada parcela aparece embaixo do preço, em toda a vitrine, e o pedido entra na separação assim que o pagamento é aprovado. No cartão não há o desconto à vista.',
         ],
       },
       {
         titulo: 'Pagar na retirada',
         paragrafos: [
-          'Para quem retira no Centro de Várzea Alegre: a peça fica separada e o pagamento é feito na hora de receber, em PIX ou dinheiro, sem taxa.',
+          'Para quem retira no Centro de Várzea Alegre: a peça fica separada e o pagamento é feito na hora de receber, em PIX ou dinheiro. Como é à vista, o desconto de 10% vale aqui também.',
         ],
       },
       {
